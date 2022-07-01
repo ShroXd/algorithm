@@ -34,3 +34,11 @@ for each unsorted element X
 If the number of inversions in an array is less than a constant multiple of the array size, we say that the array is partially sorted.
 
 When the number of inversions is low, insertion sort is likely to be faster than any sorting method.
+
+## Shell sort
+
+```
+for gap = size / 2n down to 1
+    for each gap in array
+        sort all the elements at gap 
+```
