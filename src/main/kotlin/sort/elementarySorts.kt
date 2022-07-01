@@ -22,15 +22,15 @@ fun <T : Comparable<T>> insertion(a: Array<T>) {
 
 fun <T : Comparable<T>> shell(a: Array<T>) {
     val n = a.size - 1
+    val divider = 2
 
-    var gap: Int = n / 2
+    var gap = n / divider
     while (gap > 0) {
         for (i in gap..n) {
-            for (j in i downTo gap step gap) {
+            for (j in i downTo gap step gap)
                 if (less(a[j], a[j - gap]))
-                    swap(a, j, j - 1)
-            }
+                    swap(a, j, j - gap)
         }
-        gap /= 2
+        gap /= divider
     }
 }
