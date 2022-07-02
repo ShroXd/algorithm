@@ -22,12 +22,33 @@ fun <T : Comparable<T>> isSorted(a: Array<T>): Boolean {
 }
 
 fun run(fn: Runnable) {
-    // TODO: show the log during the test
     val time = measureTimeMillis {
         fn.run()
     }
 
     print("Time: $time")
+}
+
+// Merge two sorted sections of single array
+fun merge(a: Array<Int>, lo: Int, mid: Int, hi: Int) {
+    var i = lo
+    var j = mid + 1
+    val temp = Array(a.size) { 0 }
+
+    for (k in lo..hi)
+        temp[k] = a[k]
+
+    for (k in lo..hi) {
+        if (i > mid) {
+            a[k] = temp[j++]
+        } else if (j > hi) {
+            a[k] = temp[i++]
+        } else if (less(temp[i], temp[j])) {
+            a[k] = temp[i++]
+        } else {
+            a[k] = temp[j++]
+        }
+    }
 }
 
 fun generateRandomIntArray(n: Int): Array<Int> = Array(n) { Random.nextInt() }
