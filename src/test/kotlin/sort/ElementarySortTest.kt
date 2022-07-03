@@ -5,7 +5,7 @@ import kotlin.test.assertContentEquals
 
 
 internal class ElementarySortTest {
-    private var n = 1000
+    private var n = 3
 
     @Test
     fun testSelectionSort() {
@@ -53,7 +53,7 @@ internal class ElementarySortTest {
     }
 
     @Test
-    fun testMergeSort() {
+    fun testTopDownMergeSort() {
         val arr: Array<Int> = generateRandomIntArray(n)
         val res: Array<Int> = generateSortedArray(arr)
 
@@ -63,7 +63,7 @@ internal class ElementarySortTest {
     }
 
     @Test
-    fun testMergeSort1() {
+    fun testTopDownMergeSortImprove1() {
         val arr1: Array<Int> = generateRandomIntArray(n)
         val res1: Array<Int> = generateSortedArray(arr1)
 
@@ -75,5 +75,15 @@ internal class ElementarySortTest {
 
         assertContentEquals(arr1, res1)
         assertContentEquals(arr2, res2)
+    }
+
+    @Test
+    fun testBottomUpMergeSort() {
+        val arr: Array<Int> = generateRandomIntArray(n)
+        val res: Array<Int> = generateSortedArray(arr)
+
+        sort.run { bottomUpMergeSort(arr) }
+
+        assertContentEquals(arr, res)
     }
 }
