@@ -14,7 +14,7 @@ internal class ElementarySortTest {
 
         sort.run { selection(arr) }
 
-        assertContentEquals(arr, res)
+        assertContentEquals(res, arr)
     }
 
     @Test
@@ -24,7 +24,7 @@ internal class ElementarySortTest {
 
         sort.run { insertion(arr) }
 
-        assertContentEquals(arr, res)
+        assertContentEquals(res, arr)
     }
 
     @Test
@@ -34,7 +34,7 @@ internal class ElementarySortTest {
 
         sort.run { shell(arr) }
 
-        assertContentEquals(arr, res)
+        assertContentEquals(res, arr)
     }
 
     @Test
@@ -48,8 +48,8 @@ internal class ElementarySortTest {
         sort.run { merge(arr1, 0, (arr1.size - 1) / 2, arr1.size - 1) }
         sort.run { merge(arr2, 0, (arr2.size - 1) / 2, arr2.size - 1) }
 
-        assertContentEquals(arr1, res1)
-        assertContentEquals(arr2, res2)
+        assertContentEquals(res1, arr1)
+        assertContentEquals(res2, arr2)
     }
 
     @Test
@@ -59,7 +59,7 @@ internal class ElementarySortTest {
 
         sort.run { topDownMergeSort(arr) }
 
-        assertContentEquals(arr, res)
+        assertContentEquals(res, arr)
     }
 
     @Test
@@ -73,8 +73,8 @@ internal class ElementarySortTest {
         sort.run { topDownMergeSortImprove1(arr1) }
         sort.run { topDownMergeSortImprove1(arr2) }
 
-        assertContentEquals(arr1, res1)
-        assertContentEquals(arr2, res2)
+        assertContentEquals(res1, arr1)
+        assertContentEquals(res2, arr2)
     }
 
     @Test
@@ -84,6 +84,6 @@ internal class ElementarySortTest {
 
         sort.run { bottomUpMergeSort(arr) }
 
-        assertContentEquals(arr, res)
+        assertContentEquals(res, arr)
     }
 }
