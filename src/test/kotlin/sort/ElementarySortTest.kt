@@ -57,7 +57,7 @@ internal class ElementarySortTest {
         val arr: Array<Int> = generateRandomIntArray(n)
         val res: Array<Int> = generateSortedArray(arr)
 
-        sort.run { mergeSort(arr) }
+        sort.run { topDownMergeSort(arr) }
 
         assertContentEquals(arr, res)
     }
@@ -70,8 +70,8 @@ internal class ElementarySortTest {
         val arr2: Array<Int> = arrayOf(4, 5, 6, 1, 2, 3)
         val res2: Array<Int> = arrayOf(1, 2, 3, 4, 5, 6)
 
-        sort.run { mergeSort1(arr1) }
-        sort.run { mergeSort1(arr2) }
+        sort.run { topDownMergeSortImprove1(arr1) }
+        sort.run { topDownMergeSortImprove1(arr2) }
 
         assertContentEquals(arr1, res1)
         assertContentEquals(arr2, res2)
