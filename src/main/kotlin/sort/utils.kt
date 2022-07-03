@@ -29,16 +29,12 @@ fun run(fn: Runnable) {
     print("Time: $time")
 }
 
-// Merge two sorted sections of single array
 fun merge(a: Array<Int>, lo: Int, mid: Int, hi: Int) {
     var i = lo
     var j = mid + 1
-    val temp = Array(a.size) { 0 }
+    val temp = a.clone()
 
-    for (k in lo..hi)
-        temp[k] = a[k]
-
-    for (k in lo..hi) {
+    for (k in 0..hi) {
         if (i > mid) {
             a[k] = temp[j++]
         } else if (j > hi) {
