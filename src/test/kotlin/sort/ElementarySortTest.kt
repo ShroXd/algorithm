@@ -61,4 +61,19 @@ internal class ElementarySortTest {
 
         assertContentEquals(arr, res)
     }
+
+    @Test
+    fun testMergeSort1() {
+        val arr1: Array<Int> = generateRandomIntArray(n)
+        val res1: Array<Int> = generateSortedArray(arr1)
+
+        val arr2: Array<Int> = arrayOf(4, 5, 6, 1, 2, 3)
+        val res2: Array<Int> = arrayOf(1, 2, 3, 4, 5, 6)
+
+        sort.run { mergeSort1(arr1) }
+        sort.run { mergeSort1(arr2) }
+
+        assertContentEquals(arr1, res1)
+        assertContentEquals(arr2, res2)
+    }
 }
