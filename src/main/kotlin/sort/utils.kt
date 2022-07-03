@@ -29,12 +29,12 @@ fun run(fn: Runnable) {
     print("Time: $time")
 }
 
-fun merge(a: Array<Int>, lo: Int, mid: Int, hi: Int) {
+fun <T: Comparable<T>> merge(a: Array<T>, lo: Int, mid: Int, hi: Int) {
     var i = lo
     var j = mid + 1
     val temp = a.clone()
 
-    for (k in 0..hi) {
+    for (k in lo..hi) {
         if (i > mid) {
             a[k] = temp[j++]
         } else if (j > hi) {
