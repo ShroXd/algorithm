@@ -30,7 +30,7 @@ for each unsorted element X
 		break loop and insert X here
 ```
 
-### partially sorted array
+### Partially sorted array
 If the number of inversions in an array is less than a constant multiple of the array size, we say that the array is partially sorted.
 
 When the number of inversions is low, insertion sort is likely to be faster than any sorting method.
@@ -41,4 +41,28 @@ When the number of inversions is low, insertion sort is likely to be faster than
 for gap = size / 2n down to 1
     for each gap in array
         sort all the elements at gap 
+```
+
+
+# Merge sorts
+
+The algorithms that we consider in this section are based on a simple operation known as _merging_: combining two ordered arrays to make one larger ordered array.
+To sort an array, divide it into two halves, sort the two halves (recursively), and them merge the result.
+Since we divide the array into two halves, so for an N items array, the time will be NlogN.
+
+## Top-down mergeSort
+
+The algorithm is: if it sorts the two sub-arrays, it sorts the whole array, by merging together the sub-arrays.
+This is one-of best-known examples of the utility of the _divide-and-conquer_ paradigm for efficient algorithm design.
+
+```
+find midIdx of array
+recursively sort left part
+recursively sort right part
+i = lower bounds
+j = midIdx
+for k = lower bounds to upper bounds
+    if i out of mid: put the right part into result
+    if j out of high bounds: put the left part into result
+    put the lower value into result
 ```
