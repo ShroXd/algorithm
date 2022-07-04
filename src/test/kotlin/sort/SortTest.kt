@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
 
 
-internal class ElementarySortTest {
+internal class SortTest {
     private var n = 3
 
     @Test
