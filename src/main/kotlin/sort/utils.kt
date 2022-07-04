@@ -29,7 +29,7 @@ fun run(fn: Runnable) {
     print("Time: $time")
 }
 
-fun <T: Comparable<T>> merge(a: Array<T>, lo: Int, mid: Int, hi: Int) {
+fun <T : Comparable<T>> merge(a: Array<T>, lo: Int, mid: Int, hi: Int) {
     var i = lo
     var j = mid + 1
     val temp = a.clone()
@@ -45,6 +45,18 @@ fun <T: Comparable<T>> merge(a: Array<T>, lo: Int, mid: Int, hi: Int) {
             a[k] = temp[j++]
         }
     }
+}
+
+fun append(arr: Array<Int>, element: Int): Array<Int> {
+    val list: MutableList<Int> = arr.toMutableList()
+    list.add(element)
+    return list.toTypedArray()
+}
+
+inline fun <reified T : Comparable<T>> remove(arr: Array<T>, index: Int): Array<T> {
+    val list: MutableList<T> = arr.toMutableList()
+    list.removeAt(index)
+    return list.toTypedArray()
 }
 
 fun generateRandomIntArray(n: Int): Array<Int> = Array(n) { Random.nextInt() }
