@@ -5,7 +5,7 @@ import kotlin.test.assertContentEquals
 
 
 internal class SortTest {
-    private var n = 4
+    private var n = 3
 
     @Test
     fun testSelectionSort() {
@@ -89,10 +89,10 @@ internal class SortTest {
 
     @Test
     fun testQuickSort() {
-        var arr: Array<Int> = generateRandomIntArray(n)
+        val arr: Array<Int> = generateRandomIntArray(n)
         val res: Array<Int> = generateSortedArray(arr)
 
-        sort.run { arr = quickSort(arr) }
+        sort.run { quickSort(arr, 0, arr.size - 1) }
 
         assertContentEquals(res, arr)
     }
