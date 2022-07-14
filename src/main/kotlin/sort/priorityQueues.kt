@@ -9,16 +9,14 @@ interface MaxPriorityQueue {
 }
 
 class MaxPriorityQueueUnorderedArray() : MaxPriorityQueue {
-    var capacity: Int = 10
-        private set
-    var size: Int = 0
-        private set
+    private var capacity: Int = 10
+    private var size: Int = 0
 
     private var queue: Array<Int> = Array(this.size) { 0 }
 
     constructor(max: Int) : this() {
-        this.size = max
-        this.queue = Array(this.size) { 0 }
+        this.capacity = max
+        this.queue = Array(this.capacity) { 0 }
     }
 
     constructor(queue: Array<Int>) : this() {
@@ -29,12 +27,12 @@ class MaxPriorityQueueUnorderedArray() : MaxPriorityQueue {
     override fun isEmpty(): Boolean = this.size == 0
 
     override fun insert(v: Int) {
-        if (this.size / this.capacity > 1.5) {
-            val temp = Array(this.size * 2) { 0 }
+        if (this.size.toFloat() / this.capacity.toFloat() > 0.5) {
+            this.capacity = this.capacity * 2
+            val temp = Array(this.capacity) { 0 }
 
-            for ((el, idx) in this.queue.withIndex()) {
-                temp[idx] = el
-            }
+            for (idx in 0 until this.size)
+                temp[idx] = this.queue[idx]
 
             this.queue = temp.clone()
         }
@@ -53,9 +51,9 @@ class MaxPriorityQueueUnorderedArray() : MaxPriorityQueue {
     }
 
     override fun delMax(): Int {
-        var currentMaxIdx = this.queue.size - 1
+        var currentMaxIdx = this.size - 1
 
-        for (idx in this.queue.size - 2 downTo 0)
+        for (idx in this.size - 2 downTo 0)
             if (this.queue[idx] > this.queue[currentMaxIdx])
                 currentMaxIdx = idx
 
