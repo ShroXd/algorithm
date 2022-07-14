@@ -133,4 +133,28 @@ internal class SortTest {
 
         assertEquals(true, maxPQ.isEmpty())
     }
+
+    @Test
+    fun testMaxPriorityQueueOrderedArray() {
+        // Initialize the maxPQ with capacity
+        val maxPQ = MaxPriorityQueueOrderedArray(10)
+
+        assertEquals(true, maxPQ.isEmpty())
+
+        maxPQ.insert(1)
+        maxPQ.insert(2)
+        maxPQ.insert(3)
+        maxPQ.insert(10)
+        maxPQ.insert(5)
+        maxPQ.insert(4)
+        maxPQ.insert(7)
+
+        assertEquals(10, maxPQ.max())
+        assertEquals(10, maxPQ.delMax())
+        assertEquals(3, maxPQ.delMax())
+        assertEquals(2, maxPQ.delMax())
+        assertEquals(1, maxPQ.delMax())
+
+        assertEquals(true, maxPQ.isEmpty())
+    }
 }
