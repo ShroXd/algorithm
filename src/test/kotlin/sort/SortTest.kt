@@ -2,6 +2,7 @@ package sort
 
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
 
 internal class SortTest {
@@ -95,5 +96,25 @@ internal class SortTest {
         sort.run { quickSort(arr, 0, arr.size - 1) }
 
         assertContentEquals(res, arr)
+    }
+
+    @Test
+    fun testMaxPriorityQueueUnorderedArray() {
+        val maxPQ = MaxPriorityQueueUnorderedArray(3)
+
+        assertEquals(true, maxPQ.isEmpty())
+
+        maxPQ.insert(1)
+        maxPQ.insert(2)
+        maxPQ.insert(3)
+        maxPQ.insert(10)
+
+        assertEquals(10, maxPQ.max())
+        assertEquals(10, maxPQ.delMax())
+        assertEquals(3, maxPQ.delMax())
+        assertEquals(2, maxPQ.delMax())
+        assertEquals(1, maxPQ.delMax())
+
+        assertEquals(true, maxPQ.isEmpty())
     }
 }
