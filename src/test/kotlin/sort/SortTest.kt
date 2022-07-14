@@ -100,13 +100,29 @@ internal class SortTest {
 
     @Test
     fun testMaxPriorityQueueUnorderedArray() {
-        val maxPQ = MaxPriorityQueueUnorderedArray(3)
+        // Initialize the maxPQ with capacity
+        var maxPQ = MaxPriorityQueueUnorderedArray(3)
 
         assertEquals(true, maxPQ.isEmpty())
 
         maxPQ.insert(1)
         maxPQ.insert(2)
         maxPQ.insert(3)
+        maxPQ.insert(10)
+
+        assertEquals(10, maxPQ.max())
+        assertEquals(10, maxPQ.delMax())
+        assertEquals(3, maxPQ.delMax())
+        assertEquals(2, maxPQ.delMax())
+        assertEquals(1, maxPQ.delMax())
+
+        assertEquals(true, maxPQ.isEmpty())
+
+        // Initialize the maxPQ with exist array
+        maxPQ = MaxPriorityQueueUnorderedArray(arrayOf(1, 2, 3))
+
+        assertEquals(false, maxPQ.isEmpty())
+
         maxPQ.insert(10)
 
         assertEquals(10, maxPQ.max())

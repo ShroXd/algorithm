@@ -14,14 +14,18 @@ class MaxPriorityQueueUnorderedArray() : MaxPriorityQueue {
 
     private var queue: Array<Int> = Array(this.size) { 0 }
 
-    constructor(max: Int) : this() {
-        this.capacity = max
+    constructor(capacity: Int) : this() {
+        this.capacity = capacity
         this.queue = Array(this.capacity) { 0 }
     }
 
     constructor(queue: Array<Int>) : this() {
+        this.capacity = queue.size * 3
         this.size = queue.size
-        this.queue = queue
+        this.queue = Array(this.capacity) { 0 }
+
+        for (idx in 0 until this.size)
+            this.queue[idx] = queue[idx]
     }
 
     override fun isEmpty(): Boolean = this.size == 0
