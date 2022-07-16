@@ -130,13 +130,17 @@ class MaxPriorityQueueOrderedArray() : MaxPriorityQueue {
         this.size++
     }
 
-    override fun max(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun max(): Int = this.queue[this.size - 1]
 
+    // TODO: To handle reference data, we need to pay attention about the deep clone
     override fun delMax(): Int {
-        TODO("Not yet implemented")
+        if (this.size - 1 < 0) throw ArrayIndexOutOfBoundsException("Out of scope")
+
+        val last = this.queue[this.size - 1]
+
+        this.queue[this.size - 1] = 0
+        this.size--
+
+        return last
     }
-
-
 }

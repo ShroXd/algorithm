@@ -3,6 +3,7 @@ package sort
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 
 internal class SortTest {
@@ -151,10 +152,18 @@ internal class SortTest {
 
         assertEquals(10, maxPQ.max())
         assertEquals(10, maxPQ.delMax())
-        assertEquals(3, maxPQ.delMax())
-        assertEquals(2, maxPQ.delMax())
-        assertEquals(1, maxPQ.delMax())
+        assertEquals(7, maxPQ.delMax())
+        assertEquals(5, maxPQ.delMax())
+        assertEquals(4, maxPQ.delMax())
+
+        assertEquals(false, maxPQ.isEmpty())
+
+        maxPQ.delMax()
+        maxPQ.delMax()
+        maxPQ.delMax()
 
         assertEquals(true, maxPQ.isEmpty())
+
+        assertFailsWith<ArrayIndexOutOfBoundsException> { maxPQ.delMax() }
     }
 }
