@@ -60,6 +60,8 @@ class MaxPriorityQueueUnorderedArray() : MaxPriorityQueue {
     override fun delMax(): Int {
         var currentMaxIdx = this.size - 1
 
+        // TODO: shrink the array
+
         for (idx in this.size - 2 downTo 0)
             if (this.queue[idx] > this.queue[currentMaxIdx])
                 currentMaxIdx = idx
@@ -136,11 +138,64 @@ class MaxPriorityQueueOrderedArray() : MaxPriorityQueue {
     override fun delMax(): Int {
         if (this.size - 1 < 0) throw ArrayIndexOutOfBoundsException("Out of scope")
 
+        // TODO: shrink the array
+
         val last = this.queue[this.size - 1]
 
         this.queue[this.size - 1] = 0
         this.size--
 
         return last
+    }
+}
+
+class MaxPriorityQueueLinkedList() : MaxPriorityQueue {
+    private class Node(v: Int) {
+        var value: Int = v
+        var next: Node? = null
+    }
+
+    // Virtual node
+    private var head: Node = Node(0)
+    private var tail: Node = head
+    private var size: Int = 0
+
+    override fun isEmpty(): Boolean = this.size == 0
+
+    override fun insert(v: Int) {
+        val newNode = Node(v)
+
+        var p = this.head
+
+        while (p.next != null && p.value < v) {
+            p = p.next!!
+        }
+
+        if (p.next == null) {
+            p.next = newNode
+            tail = newNode
+        } else {
+            val temp = p.next
+            p.next = newNode
+            newNode.next = temp
+        }
+    }
+
+    override fun max(): Int = this.tail.value
+
+    override fun delMax(): Int {
+        val max = this.tail.value
+
+        var p = this.head
+
+        while (p.next != null) {
+            if (p.next?.next == null) break
+            p = p.next!!
+        }
+
+        this.tail = p
+        p.next = null
+
+        return max
     }
 }
