@@ -166,4 +166,29 @@ internal class SortTest {
 
         assertFailsWith<ArrayIndexOutOfBoundsException> { maxPQ.delMax() }
     }
+
+    @Test
+    fun testMaxPriorityQueueLinkedList() {
+        val maxPQ = MaxPriorityQueueLinkedList()
+
+        assertEquals(true, maxPQ.isEmpty())
+
+        maxPQ.insert(1)
+        maxPQ.insert(2)
+        maxPQ.insert(3)
+
+        assertEquals(3, maxPQ.size)
+
+        maxPQ.insert(9)
+        maxPQ.insert(7)
+        maxPQ.insert(8)
+
+        assertEquals(9, maxPQ.max())
+
+        assertEquals(9, maxPQ.delMax())
+        assertEquals(8, maxPQ.delMax())
+        assertEquals(7, maxPQ.delMax())
+
+        assertEquals(3, maxPQ.size)
+    }
 }

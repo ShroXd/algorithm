@@ -149,7 +149,7 @@ class MaxPriorityQueueOrderedArray() : MaxPriorityQueue {
     }
 }
 
-class MaxPriorityQueueLinkedList() : MaxPriorityQueue {
+class MaxPriorityQueueLinkedList : MaxPriorityQueue {
     private class Node(v: Int) {
         var value: Int = v
         var next: Node? = null
@@ -158,27 +158,27 @@ class MaxPriorityQueueLinkedList() : MaxPriorityQueue {
     // Virtual node
     private var head: Node = Node(0)
     private var tail: Node = head
-    private var size: Int = 0
+    var size: Int = 0
+        private set
 
     override fun isEmpty(): Boolean = this.size == 0
 
     override fun insert(v: Int) {
-        val newNode = Node(v)
+        val temp = Node(v)
 
         var p = this.head
 
-        while (p.next != null && p.value < v) {
+        while (p.next != null && p.next?.value!! < v) {
             p = p.next!!
         }
 
-        if (p.next == null) {
-            p.next = newNode
-            tail = newNode
-        } else {
-            val temp = p.next
-            p.next = newNode
-            newNode.next = temp
-        }
+        temp.next = p.next
+        p.next = temp
+
+        if (temp.next == null)
+            this.tail = temp
+
+        this.size++
     }
 
     override fun max(): Int = this.tail.value
@@ -195,6 +195,8 @@ class MaxPriorityQueueLinkedList() : MaxPriorityQueue {
 
         this.tail = p
         p.next = null
+
+        this.size--
 
         return max
     }
