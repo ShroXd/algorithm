@@ -208,7 +208,7 @@ class MaxPriorityQueueBinaryHeap : MaxPriorityQueue {
     var size: Int = 0
         private set
 
-    private var queue: Array<Int> = Array(this.capacity + 1) { 0 }
+    private var queue: Array<Int> = Array(this.capacity) { 0 }
 
     override fun isEmpty(): Boolean = this.size == 0
 
@@ -216,42 +216,52 @@ class MaxPriorityQueueBinaryHeap : MaxPriorityQueue {
         // TODO: check the capacity
 
         this.queue[this.size] = v
-        this.size++
 
-        var parentIdx = (this.size - 1) / 2
-        while (parentIdx != 1 && this.queue[parentIdx] < v) {
-            parentIdx /= 2
+        // TODO: encapsulate the swim & sink
+        var currentIdx = this.size
+        var prevIdx = (this.size - 1) / 2
+
+        while (prevIdx != 0) {
+            if (this.queue[prevIdx] < v)
+                swap(this.queue, prevIdx, currentIdx)
+            currentIdx = prevIdx
+            prevIdx /= 2
         }
 
-        swap(this.queue, this.size, parentIdx)
+        if (this.queue[prevIdx] < v)
+            swap(this.queue, prevIdx, currentIdx)
+
+        this.size++
     }
 
     override fun max(): Int = this.queue[0]
 
     override fun delMax(): Int {
+        val max = this.queue[0]
         val endIdx = this.size - 1
-        val maxEl = this.queue[0]
 
-        swap(this.queue, this.queue[0], this.queue[endIdx])
-        this.queue[this.size - 1] = 0
-
-        // TODO: check if it's necessary to shrink array
-
-        var position = 1
-
-        while (position * 2 < endIdx || position * 2 + 1 < endIdx) {
-
-            if (this.queue[position * 2] > this.queue[0]) {
-                position *= 2
-            } else if (this.queue[position*2+1] > this.queue[0]) {
-                position = position * 2 + 1
-            }
-        }
-
-        swap(this.queue, this.queue[0], this.queue[position])
-
+        swap(this.queue, 0, endIdx)
+        this.queue[endIdx] = 0
         this.size--
 
-        return maxEl
+        var currentIdx = 0
+        var nextIdx = 1
+
+        while (nextIdx + 1 < endIdx || nextIdx < endIdx) {
+            // No need to check the nextIdx < endIdx
+            // Conditions in the while:
+            // 1. left true, right must true
+            // 2. left false, if the code jump in the body of while, so the nextIdx < endIdx must be true
+            if (this.queue[nextIdx] > this.queue[currentIdx]) {
+                swap(this.queue, currentIdx, nextIdx)
+                currentIdx = nextIdx
+            } else if (nextIdx + 1 < endIdx && this.queue[nextIdx + 1] > this.queue[currentIdx]) {
+                swap(this.queue, currentIdx, nextIdx + 1)
+                currentIdx = nextIdx + 1
+            }
+            nextIdx = currentIdx * 2
+        }
+
+        return max
     }
 }

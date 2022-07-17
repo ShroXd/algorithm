@@ -191,4 +191,33 @@ internal class SortTest {
 
         assertEquals(3, maxPQ.size)
     }
+
+    @Test
+    fun testMaxPriorityQueueBinaryHeap() {
+        val maxPQ = MaxPriorityQueueBinaryHeap()
+
+        assertEquals(true, maxPQ.isEmpty())
+
+        maxPQ.insert(1)
+        maxPQ.insert(2)
+        maxPQ.insert(3)
+
+        assertEquals(3, maxPQ.size)
+
+        maxPQ.insert(9)
+        maxPQ.insert(7)
+        maxPQ.insert(8)
+
+        assertEquals(9, maxPQ.max())
+
+        assertEquals(9, maxPQ.delMax())
+        assertEquals(8, maxPQ.delMax())
+        assertEquals(7, maxPQ.delMax())
+
+        assertEquals(3, maxPQ.size)
+
+        assertEquals(3, maxPQ.delMax())
+        assertEquals(2, maxPQ.delMax())
+        assertEquals(1, maxPQ.delMax())
+    }
 }
