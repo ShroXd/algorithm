@@ -201,3 +201,57 @@ class MaxPriorityQueueLinkedList : MaxPriorityQueue {
         return max
     }
 }
+
+
+class MaxPriorityQueueBinaryHeap : MaxPriorityQueue {
+    private var capacity: Int = 10
+    var size: Int = 0
+        private set
+
+    private var queue: Array<Int> = Array(this.capacity + 1) { 0 }
+
+    override fun isEmpty(): Boolean = this.size == 0
+
+    override fun insert(v: Int) {
+        // TODO: check the capacity
+
+        this.queue[this.size] = v
+        this.size++
+
+        var parentIdx = (this.size - 1) / 2
+        while (parentIdx != 1 && this.queue[parentIdx] < v) {
+            parentIdx /= 2
+        }
+
+        swap(this.queue, this.size, parentIdx)
+    }
+
+    override fun max(): Int = this.queue[0]
+
+    override fun delMax(): Int {
+        val endIdx = this.size - 1
+        val maxEl = this.queue[0]
+
+        swap(this.queue, this.queue[0], this.queue[endIdx])
+        this.queue[this.size - 1] = 0
+
+        // TODO: check if it's necessary to shrink array
+
+        var position = 1
+
+        while (position * 2 < endIdx || position * 2 + 1 < endIdx) {
+
+            if (this.queue[position * 2] > this.queue[0]) {
+                position *= 2
+            } else if (this.queue[position*2+1] > this.queue[0]) {
+                position = position * 2 + 1
+            }
+        }
+
+        swap(this.queue, this.queue[0], this.queue[position])
+
+        this.size--
+
+        return maxEl
+    }
+}
