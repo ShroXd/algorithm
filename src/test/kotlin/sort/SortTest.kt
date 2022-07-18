@@ -220,4 +220,14 @@ internal class SortTest {
         assertEquals(2, maxPQ.delMax())
         assertEquals(1, maxPQ.delMax())
     }
+
+    @Test
+    fun testHeapSort() {
+        val arr: Array<Int> = generateRandomIntArray(n)
+        val res: Array<Int> = generateSortedArray(arr)
+
+        sort.run { heapSort(arr) }
+
+        assertContentEquals(res, arr)
+    }
 }

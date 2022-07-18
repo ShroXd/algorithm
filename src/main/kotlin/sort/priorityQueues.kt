@@ -202,7 +202,6 @@ class MaxPriorityQueueLinkedList : MaxPriorityQueue {
     }
 }
 
-
 class MaxPriorityQueueBinaryHeap : MaxPriorityQueue {
     private var capacity: Int = 10
     var size: Int = 0
