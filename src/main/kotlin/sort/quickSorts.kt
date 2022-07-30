@@ -1,5 +1,7 @@
 package sort
 
+import edu.princeton.cs.algs4.StdRandom
+
 fun <T : Comparable<T>> partition(a: Array<T>, lo: Int, hi: Int): Int {
     var i = lo
     var j = hi + 1
@@ -20,9 +22,14 @@ fun <T : Comparable<T>> partition(a: Array<T>, lo: Int, hi: Int): Int {
     return j
 }
 
-fun <T : Comparable<T>> quickSort(a: Array<T>, lo: Int, hi: Int) {
+fun <T : Comparable<T>> sort(a: Array<T>, lo: Int, hi: Int) {
     if (hi <= lo) return
     val j = partition(a, lo, hi)
-    quickSort(a, lo, j - 1)
-    quickSort(a, j + 1, hi)
+    sort(a, lo, j - 1)
+    sort(a, j + 1, hi)
+}
+
+fun <T: Comparable<T>> quickSort(a: Array<T>) {
+    StdRandom.shuffle(a)
+    sort(a, 0, a.size - 1)
 }

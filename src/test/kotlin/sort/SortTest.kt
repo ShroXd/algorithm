@@ -94,7 +94,7 @@ internal class SortTest {
         val arr: Array<Int> = generateRandomIntArray(n)
         val res: Array<Int> = generateSortedArray(arr)
 
-        sort.run { quickSort(arr, 0, arr.size - 1) }
+        sort.run { quickSort(arr) }
 
         assertContentEquals(res, arr)
     }
