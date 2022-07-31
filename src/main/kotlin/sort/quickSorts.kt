@@ -8,10 +8,8 @@ fun partition(a: Array<Int>, lo: Int, hi: Int): Int {
     val v = a[lo]
 
     while (true) {
-        while (less(a[++i], v)) {}
-//            if (i == hi) break
-        while (less(v, a[--j])) {}
-//            if (j == lo) break
+        while (a[++i] < v) {}
+        while (a[--j] > v) {}
 
         if (i >= j) break
         swap(a, i, j)
