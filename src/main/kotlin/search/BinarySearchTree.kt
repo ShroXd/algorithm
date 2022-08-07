@@ -2,11 +2,11 @@ package search
 
 class BinarySearchTree<K : Comparable<K>, V> : SymbolTable<K, V> {
     data class Node<Key, Value>(val key: Key, var value: Value) {
-        var left: Node<Key, Value>? = null;
-        var right: Node<Key, Value>? = null;
+        var left: Node<Key, Value>? = null
+        var right: Node<Key, Value>? = null
     }
 
-    private var root: Node<K, V>? = null;
+    private var root: Node<K, V>? = null
     var size: Int = 0
         private set
 
@@ -19,16 +19,18 @@ class BinarySearchTree<K : Comparable<K>, V> : SymbolTable<K, V> {
 
         val gap: Int = key.compareTo(node.key)
 
-        if (gap < 0) {
-            node.left = put(node.left, key, value)
-        } else if (gap > 0) {
+        if (gap > 0) {
+            // right sub tree
             node.right = put(node.right, key, value)
+        } else if (gap < 0) {
+            // left sub tree
+            node.left = put(node.left, key, value)
         } else {
             node.value = value
         }
 
         // This node is the prev node.left or prev node.right
-        return node;
+        return node
     }
 
     override fun get(key: K): V? {
@@ -40,10 +42,10 @@ class BinarySearchTree<K : Comparable<K>, V> : SymbolTable<K, V> {
 
         val gap: Int = key.compareTo(node.key)
 
-        return if (gap < 0) {
-            get(node.left, key)
-        } else if (gap > 0) {
+        return if (gap > 0) {
             get(node.right, key)
+        } else if (gap < 0) {
+            get(node.left, key)
         } else {
             node.value
         }
