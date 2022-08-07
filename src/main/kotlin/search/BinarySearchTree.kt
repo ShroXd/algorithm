@@ -77,4 +77,32 @@ class BinarySearchTree<K : Comparable<K>, V> : SymbolTable<K, V> {
     }
 
     override fun isEmpty(): Boolean = size == 0
+
+    fun minKey(): K? {
+        return minKey(root)
+    }
+
+    private fun minKey(node: Node<K, V>?): K? {
+        if (node == null) return null
+
+        return if (node.left != null) {
+            minKey(node.left)
+        } else {
+            node.key
+        }
+    }
+
+    fun maxKey(): K? {
+        return maxKey(root)
+    }
+
+    private fun maxKey(node: Node<K, V>?): K? {
+        if (node == null) return null
+
+        return if (node.right != null) {
+            maxKey(node.right)
+        } else {
+            node.key
+        }
+    }
 }
