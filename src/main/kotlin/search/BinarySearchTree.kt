@@ -105,4 +105,22 @@ class BinarySearchTree<K : Comparable<K>, V> : SymbolTable<K, V> {
             node.key
         }
     }
+
+    fun floor(key: K): V? {
+        return floor(root, key)
+    }
+
+    private fun floor(node: Node<K, V>?, key: K): V? {
+        if (node == null) return null
+
+        val gap: Int = key.compareTo(node.key)
+
+        if (gap < 0) {
+            floor(node.left, key)
+        } else {
+            floor(node.right, key)
+        }
+
+        return node.value
+    }
 }

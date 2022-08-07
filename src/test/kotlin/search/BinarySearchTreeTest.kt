@@ -40,5 +40,7 @@ internal class BinarySearchTreeTest {
 
         assertEquals(1, bst.minKey())
         assertEquals(10, bst.maxKey())
+
+        assertEquals("Four", bst.floor(9))
     }
 }
