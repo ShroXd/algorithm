@@ -12,6 +12,8 @@ internal class BinarySearchTreeTest {
         bst.put("First key", "First value")
         bst.put("Second key", "Second value")
 
+        assertEquals(2, bst.size)
+
         assertEquals("First value", bst.get("First key"))
         assertEquals("Second value", bst.get("Second key"))
     }

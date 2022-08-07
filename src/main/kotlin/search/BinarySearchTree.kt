@@ -15,7 +15,10 @@ class BinarySearchTree<K : Comparable<K>, V> : SymbolTable<K, V> {
     }
 
     private fun put(node: Node<K, V>?, key: K, value: V): Node<K, V> {
-        if (node == null) return Node(key, value)
+        if (node == null) {
+            size++
+            return Node(key, value)
+        }
 
         val gap: Int = key.compareTo(node.key)
 
