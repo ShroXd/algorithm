@@ -1,11 +1,10 @@
 package search
 
-// TODO: make it generic
-interface SymbolTable {
-    fun put(key: String, value: String);
-    fun get(key: String): String;
-    fun containes(key: String): Boolean;
-    fun delete(key: String);
+interface SymbolTable<Key: Comparable<Key>, Value> {
+    fun put(key: Key, value: Value);
+    fun get(key: Key): Value?;
+    fun containes(key: Key): Boolean;
+    fun delete(key: Key);
     fun isEmpty(): Boolean;
     // TODO: support iterable interface
 }
