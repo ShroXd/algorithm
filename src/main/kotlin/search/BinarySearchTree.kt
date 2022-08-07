@@ -54,15 +54,27 @@ class BinarySearchTree<K : Comparable<K>, V> : SymbolTable<K, V> {
         }
     }
 
-    override fun containes(key: K): Boolean {
-        TODO("Not yet implemented")
+    override fun contains(key: K): Boolean {
+        return contains(root, key)
+    }
+
+    private fun contains(node: Node<K, V>?, key: K): Boolean {
+        if (node == null) return false
+
+        val gap: Int = key.compareTo(node.key)
+
+        return if (gap > 0) {
+            contains(node.right, key)
+        } else if (gap < 0) {
+            contains(node.left, key)
+        } else {
+            true
+        }
     }
 
     override fun delete(key: K) {
         TODO("Not yet implemented")
     }
 
-    override fun isEmpty(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun isEmpty(): Boolean = size == 0
 }
