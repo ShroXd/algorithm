@@ -13,6 +13,7 @@ class RedBlackBST<K : Comparable<K>, V> {
     private var root: Node<K, V>? = null
 
     private fun isRed(node: Node<K, V>?) = node?.color == Color.RED
+    private fun size(node: Node<K, V>?) = node?.size ?: 0
 
     fun get(key: K): V? = get(root, key)
     private fun get(node: Node<K, V>?, key: K): V? {
@@ -28,7 +29,62 @@ class RedBlackBST<K : Comparable<K>, V> {
         }
     }
 
+    private fun rotateLeft(node: Node<K, V>): Node<K, V> {
+        val temp: Node<K, V> = node.right!!
+
+        node.right = temp.left
+        temp.left = node
+
+        temp.color = node.color
+        node.color = Color.RED
+
+        return temp
+    }
+
+    private fun flipColors(node: Node<K, V>) {
+        node.color = Color.RED
+        node.left?.color = Color.BLACK
+        node.right?.color = Color.BLACK
+    }
+
+    private fun rotateRight(node: Node<K, V>): Node<K, V> {
+        val temp: Node<K, V> = node.left!!
+
+        node.left = temp.right
+        temp.right = node
+
+        temp.color = node.color
+        node.color = Color.RED
+
+        return temp
+    }
+
     fun put(key: K, value: V) {
-        TODO("Implement this function")
+        root = put(root, key, value)
+        root!!.color = Color.BLACK
+    }
+
+    private fun put(node: Node<K, V>?, key: K, value: V): Node<K, V> {
+        if (node == null) return Node(key, value, 1, Color.RED)
+
+        val gap: Int = key.compareTo(node.key)
+
+        if (gap < 0) {
+            node.left = put(node.left, key, value)
+        } else if (gap > 0) {
+            node.right = put(node.right, key, value)
+        } else {
+            node.value = value
+        }
+
+        var temp: Node<K, V> = node
+
+        if (!isRed(node.left) && isRed(node.right)) temp = rotateLeft(temp)
+        if (isRed(node.left) && isRed(node.left?.left)) temp = rotateRight(temp)
+        if (isRed(node.left) && isRed(node.right)) flipColors(temp)
+
+        temp.size = size(node.left) + size(node.right) + 1
+
+        return temp
     }
 }
