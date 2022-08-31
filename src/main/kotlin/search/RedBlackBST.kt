@@ -5,7 +5,8 @@ enum class Color {
 }
 
 class RedBlackBST<K : Comparable<K>, V> {
-    data class Node<K:Comparable<K>, V>(val key: K, var value: V, var size: Int, var color: Color) {
+    // TODO: make the key private settable
+    data class Node<K:Comparable<K>, V>(var key: K, var value: V, var size: Int, var color: Color) {
         var left: Node<K, V>? = null
         var right: Node<K, V>? = null
     }
@@ -41,12 +42,6 @@ class RedBlackBST<K : Comparable<K>, V> {
         return temp
     }
 
-    private fun flipColors(node: Node<K, V>) {
-        node.color = Color.RED
-        node.left?.color = Color.BLACK
-        node.right?.color = Color.BLACK
-    }
-
     private fun rotateRight(node: Node<K, V>): Node<K, V> {
         val temp: Node<K, V> = node.left!!
 
@@ -55,6 +50,25 @@ class RedBlackBST<K : Comparable<K>, V> {
 
         temp.color = node.color
         node.color = Color.RED
+
+        return temp
+    }
+
+    private fun flipColors(node: Node<K, V>) {
+        node.color = Color.RED
+        node.left?.color = Color.BLACK
+        node.right?.color = Color.BLACK
+    }
+
+    private fun moveRedLeft(node: Node<K, V>): Node<K, V> {
+        var temp: Node<K, V> = node
+
+        flipColors(temp)
+        if (isRed(temp.right?.left)) {
+            temp.right = rotateRight(temp.right!!)
+            temp = rotateLeft(temp)
+            flipColors(temp)
+        }
 
         return temp
     }
@@ -86,5 +100,84 @@ class RedBlackBST<K : Comparable<K>, V> {
         temp.size = size(node.left) + size(node.right) + 1
 
         return temp
+    }
+
+    private fun min(node: Node<K, V>): Node<K, V> {
+        return if (node.left == null) {
+            node
+        } else {
+            min(node.left!!)
+        }
+    }
+
+    fun deleteMin() {
+        if (!isRed(root?.left) && !isRed(root?.right))  root?.color = Color.RED
+
+        root = deleteMin(root)
+        if (size(root) != 0)    root!!.color = Color.BLACK
+    }
+
+    private fun deleteMin(node: Node<K, V>?): Node<K, V>? {
+        if (node?.left == null) return null
+
+        var temp: Node<K, V> = node
+
+        if (!isRed(node.left) && !isRed(node.right))
+            temp = moveRedLeft(temp.left!!)
+
+        temp.left = deleteMin(temp.left)
+
+        return balance(temp)
+    }
+
+    private fun balance(node: Node<K, V>): Node<K, V> {
+        var temp: Node<K, V> = node
+
+        if (!isRed(node.left) && isRed(node.right)) temp = rotateLeft(temp)
+        if (isRed(node.left) && isRed(node.left?.left)) temp = rotateRight(temp)
+        if (isRed(node.left) && isRed(node.right)) flipColors(temp)
+
+        temp.size = size(node.left) + size(node.right) + 1
+
+        return temp
+    }
+
+    fun delete(key: K) {
+        // TODO: Check if tree has the key
+
+        if (!isRed(root?.left) && !isRed(root?.right))  root?.color = Color.RED
+        root = delete(root, key)
+
+        if (size(root) != 0)    root!!.color = Color.BLACK
+    }
+
+    private fun delete(node: Node<K, V>?, key: K): Node<K, V>? {
+        if (node == null) return null
+
+        var temp: Node<K, V> = node
+        val gap: Int = key.compareTo(temp.key)
+
+        if (gap < 0) {
+            if (!isRed(temp.left) && !isRed(temp.right))
+                temp = moveRedLeft(temp)
+            temp.left = delete(temp.left, key)
+        } else {
+            if (isRed(temp.left))
+                temp = rotateRight(temp)
+            if (key.compareTo(temp.key) == 0 && temp.right == null)
+                return null
+            if (!isRed(temp.right) && !isRed(temp.right?.left))
+                temp = moveRedLeft(temp)
+            if (key.compareTo(temp.key) == 0) {
+                val x: Node<K, V> = min(temp.right!!)
+                temp.key = x.key
+                temp.value = x.value
+                temp.right = deleteMin(temp.right)
+            } else {
+                temp.right = delete(temp.right, key)
+            }
+        }
+
+        return balance(temp)
     }
 }

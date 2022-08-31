@@ -13,8 +13,14 @@ class RedBlackBSTTest {
         rd.put("second key", 2)
         rd.put("third key", 3)
 
-        assertEquals(3, rd.get("third key"))
-        assertEquals(2, rd.get("second key"))
         assertEquals(1, rd.get("first key"))
+        assertEquals(2, rd.get("second key"))
+        assertEquals(3, rd.get("third key"))
+
+        rd.delete("first key")
+        rd.delete("third key")
+        assertEquals(null, rd.get("first key"))
+        assertEquals(2, rd.get("second key"))
+        assertEquals(null, rd.get("third key"))
     }
 }
