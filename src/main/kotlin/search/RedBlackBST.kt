@@ -49,26 +49,6 @@ class RedBlackBST<K : Comparable<K>, V> {
         return get(key) != null
     }
 
-    // Insertion
-    private fun put(key: K, value: V, node: Node<K, V>?): Node<K, V>? {
-        if (node == null) {
-            return Node(key, value, Color.RED, 1)
-        }
-
-        val gap: Int = key.compareTo(node.key)
-        if (gap > 0) {
-            node.right = put(key, value, node.right)
-        } else if (gap < 0) {
-            node.left = put(key, value, node.left)
-        } else {
-            node.value = value
-        }
-
-        // TODO: fix up the tree
-
-        return node
-    }
-
     private fun rotateLeft(node: Node<K, V>): Node<K, V>? {
         val temp = node.right
 
@@ -99,9 +79,43 @@ class RedBlackBST<K : Comparable<K>, V> {
         return temp
     }
 
-    private fun flipColor(node: Node<K, V>) {
+    private fun flipColor(node: Node<K, V>): Node<K, V> {
         node.color = Color.RED
         node.left?.color = Color.BLACK
         node.right?.color = Color.BLACK
+
+        return node
+    }
+
+    // Insertion
+    private fun put(key: K, value: V, node: Node<K, V>?): Node<K, V>? {
+        if (node == null) {
+            return Node(key, value, Color.RED, 1)
+        }
+
+        var currentNode = node
+
+        val gap: Int = key.compareTo(currentNode.key)
+        if (gap > 0) {
+            currentNode.right = put(key, value, currentNode.right)
+        } else if (gap < 0) {
+            currentNode.left = put(key, value, currentNode.left)
+        } else {
+            currentNode.value = value
+        }
+
+        if (isRed(currentNode.right) && !isRed(currentNode.left)) {
+            currentNode = rotateLeft(currentNode)
+        }
+        if (isRed(currentNode?.left) && isRed(currentNode?.left?.left)) {
+            currentNode = currentNode?.let { rotateRight(it) }
+        }
+        if (isRed(currentNode?.left) && isRed(currentNode?.right)) {
+            currentNode = currentNode?.let { flipColor(it) }
+        }
+
+        currentNode?.size = size(currentNode?.left) + size(currentNode?.right) + 1
+
+        return currentNode
     }
 }
