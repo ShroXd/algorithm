@@ -210,4 +210,20 @@ class RedBlackBST<K : Comparable<K>, V> {
 
         return balance(cNode)
     }
+    fun delete(key: K) {
+        if (!contains(key)) {
+            return
+        }
+
+        if (!isRed(root?.left) && !isRed(root?.right)) {
+            root?.color = Color.RED
+        }
+
+        // TODO: fix this
+        root = delete(key, root!!)
+
+        if (!isEmpty()) {
+            root?.color = Color.BLACK
+        }
+    }
 }
