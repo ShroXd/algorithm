@@ -185,23 +185,24 @@ class RedBlackBST<K : Comparable<K>, V> {
             if (!isRed(cNode.left) && !isRed(cNode.left?.left)) {
                 cNode = moveRedLeft(cNode)
             }
-            cNode.left = cNode.left?.left?.let { delete(key, it) }
-
+            cNode.left = delete(key, cNode.left!!)
         } else {
             if (isRed(cNode.left)) {
                 cNode = rotateRight(cNode)
             }
-            if (key == cNode.key && !isRed(cNode.right?.left)) {
+            // bottom
+            if (key == cNode.key && cNode.right == null) {
                 return null
             }
             if (!isRed(cNode.right) && !isRed(cNode.right?.left)) {
                 cNode = moveRedRight(cNode)
             }
 
+            // middle
             if (key == node.key) {
-                val temp = min(cNode.right!!)
-                cNode.key = temp.key
-                cNode.value = temp.value
+                val minNode = min(cNode.right!!)
+                cNode.key = minNode.key
+                cNode.value = minNode.value
                 cNode.right = deleteMin(cNode.right!!)
             } else {
                 cNode.right = delete(key, cNode.right!!)
