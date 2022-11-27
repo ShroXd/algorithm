@@ -1,22 +1,38 @@
 package tree
 
 import org.junit.jupiter.api.Test
+import java.util.*
 import kotlin.test.assertEquals
 
 internal class BTreeTest {
 
     @Test
-    fun testSelectionSort() {
+    fun testBTree() {
         val bTree = BTree<Int>(2)
+        val randomTestNumbers = IntArray(100) { Random().nextInt() }.asList()
 
-        bTree.insert(8)
-        bTree.insert(9)
-        bTree.insert(10)
-        bTree.insert(11)
+//        randomTestNumbers.forEach {
+//            bTree.insert(it)
+//        }
+//
+//        randomTestNumbers.forEach {
+//            assertEquals(false, bTree.search(it) == null)
+//        }
 
-        assertEquals(bTree.search(8) == null, false)
-        assertEquals(bTree.search(9) == null, false)
-        assertEquals(bTree.search(10) == null, false)
-        assertEquals(bTree.search(11) == null, false)
+        bTree.insert(2041479508)
+        bTree.insert(-719616384)
+        bTree.insert(-388887231)
+        bTree.insert(-1384822873)
+        bTree.insert(-1384822873)
+        bTree.insert(1597592069)
+        bTree.insert(684357915)
+        bTree.insert(1865559723)
+        bTree.insert(1093853064)
+        bTree.insert(-592455470)
+        bTree.insert(374406946)
+        bTree.insert(316156639)
+        bTree.insert(-1304898134)
+        bTree.insert(-867590560)
+        bTree.insert(-367502180)
     }
 }

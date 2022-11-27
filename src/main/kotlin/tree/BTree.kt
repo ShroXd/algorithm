@@ -56,7 +56,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         // left child node, right child node
         // [t, t), [t, 2t)
         newNode.keys = childNode.keys.slice(0 until t - 1).toMutableList()
-        childNode.keys = childNode.keys.slice(t until 2 * t).toMutableList()
+        childNode.keys = childNode.keys.slice(t until 2 * t - 1).toMutableList()
 
         newNode.numOfKeys = newNode.keys.size
         childNode.numOfKeys = childNode.keys.size
@@ -67,7 +67,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             newNode.isLeaf = false
 
             newNode.children = childNode.children.slice(0 until t).toMutableList()
-            childNode.children = childNode.children.slice(t until 2 * t).toMutableList()
+            childNode.children = childNode.children.slice(t until 2 * t - 1).toMutableList()
         }
     }
 
@@ -82,7 +82,8 @@ class BTree<K : Comparable<K>>(private val t: Int) {
                 }
             }
 
-            if (idx == node.numOfKeys - 1) {
+            // When the idx reach to the endIndex, the item can be larger than key or smaller than key
+            if (node.keys[idx] < key && idx == node.numOfKeys - 1) {
                 idx += 1
             }
 
@@ -91,19 +92,24 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         } else {
             var idx = 0
             for (i in 0 until node.numOfKeys) {
+                idx = i
                 if (node.keys[i] >= key) {
-                    idx = i
                     break
                 }
             }
+
 
             val targetChild = node.children[idx]
             // If the child node is full
             if (targetChild.numOfKeys == capacityOfKeys) {
                 splitChild(idx, node)
+                if (node.keys[idx] < key) {
+                    idx += 1
+                }
             }
-            if (node.keys[idx] > key) {
-                idx -= 1
+
+            if (node.keys[idx] < key) {
+                idx += 1
             }
 
             insertNonFull(key, node.children[idx])
@@ -120,14 +126,29 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         } else {
             val currentRoot: Node<K> = root!!
 
+            // If root is full, then tree grows in height
             if (currentRoot.numOfKeys == capacityOfKeys) {
-                val newNode = Node<K>(false)
-                newNode.children.add(currentRoot)
-                currentRoot.keys.add(key)
-                currentRoot.numOfKeys += 1
+                val newRoot = Node<K>(false)
+                newRoot.children.add(currentRoot)
+                // TODO: fuck yes, split it first and add the new key then
 
-                splitChild(0, newNode)
-                root = newNode
+                splitChild(0, newRoot)
+
+                var idx = 0
+                for (i in 0 until newRoot.numOfKeys) {
+                    idx = i
+                    if (newRoot.keys[i] > key) {
+                        break
+                    }
+                }
+
+                if (newRoot.keys[idx] < key) {
+                    idx += 1
+                }
+
+                insertNonFull(key, newRoot.children[idx])
+
+                root = newRoot
             } else {
                 insertNonFull(key, currentRoot)
             }
