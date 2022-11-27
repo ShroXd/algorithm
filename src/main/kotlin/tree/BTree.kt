@@ -5,7 +5,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         var keys: MutableList<K> = mutableListOf()
         var children: MutableList<Node<K>> = mutableListOf()
 
-        var numOfKeys: Int = keys.size
+        var numOfKeys: Int = 0
     }
 
     private val capacityOfKeys: Int = 2 * t - 1
@@ -13,29 +13,27 @@ class BTree<K : Comparable<K>>(private val t: Int) {
 
     private fun search(key: K, node: Node<K>?): Node<K>? {
         if (node == null) {
-            return null
-        }
+            return search(key, root)
+        } else {
+            var idx = 0
+            while (idx < node.numOfKeys && node.keys[idx] < key) {
+                idx += 1
+            }
 
-        var idx = 0
-        for (i in 0 until node.numOfKeys) {
-            // When the for loop break, the current key is larger / equal to key
-            idx = i
-            if (node.keys[i] >= key) {
-                break
+            if (idx < node.numOfKeys) {
+                if (node.keys[idx] == key) {
+                    return node
+                } else {
+                    return search(key, node.children[idx])
+                }
+            } else if (node.isLeaf) {
+                return null
+            } else {
+                return search(key, node.children[idx])
             }
         }
-
-        // If it's equal, the target is found
-        return if (node.keys[idx] == key) {
-            node
-        } else if (node.keys[idx] < key) {
-            search(key, node.children[idx + 1])
-        } else {
-            // The current key is larger than target, so the target maybe in the left child node
-            // The keys in left child node are both smaller than current key
-            search(key, node.children[idx])
-        }
     }
+
     fun search(key: K): Node<K>? {
         return search(key, root)
     }
@@ -66,39 +64,28 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         if (childNode.children.size != 0) {
             newNode.isLeaf = false
 
-            newNode.children = childNode.children.slice(0 until t).toMutableList()
-            childNode.children = childNode.children.slice(t until 2 * t - 1).toMutableList()
+            newNode.children = childNode.children.slice(0 until t - 1).toMutableList()
+            childNode.children = childNode.children.slice(t until 2 * t).toMutableList()
         }
     }
 
     // Insert the key into a non-full node
     private fun insertNonFull(key: K, node: Node<K>) {
+        var idx = node.numOfKeys - 1
+
         if (node.isLeaf) {
-            var idx = 0
-            for (i in 0 until node.numOfKeys) {
-                idx = i
-                if (node.keys[i] >= key) {
-                    break
-                }
+            while (idx >= 0 && node.keys[idx] > key) {
+                idx -= 1
             }
 
-            // When the idx reach to the endIndex, the item can be larger than key or smaller than key
-            if (node.keys[idx] < key && idx == node.numOfKeys - 1) {
-                idx += 1
-            }
-
-            node.keys.add(idx, key)
+            node.keys.add(idx + 1, key)
             node.numOfKeys += 1
         } else {
-            var idx = 0
-            for (i in 0 until node.numOfKeys) {
-                idx = i
-                if (node.keys[i] >= key) {
-                    break
-                }
+            while (idx >= 0 && node.keys[idx] > key) {
+                idx -= 1
             }
 
-
+            idx += 1
             val targetChild = node.children[idx]
             // If the child node is full
             if (targetChild.numOfKeys == capacityOfKeys) {
@@ -106,10 +93,6 @@ class BTree<K : Comparable<K>>(private val t: Int) {
                 if (node.keys[idx] < key) {
                     idx += 1
                 }
-            }
-
-            if (node.keys[idx] < key) {
-                idx += 1
             }
 
             insertNonFull(key, node.children[idx])
@@ -130,18 +113,11 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             if (currentRoot.numOfKeys == capacityOfKeys) {
                 val newRoot = Node<K>(false)
                 newRoot.children.add(currentRoot)
-                // TODO: fuck yes, split it first and add the new key then
 
                 splitChild(0, newRoot)
 
+                // Now root node has two child nodes
                 var idx = 0
-                for (i in 0 until newRoot.numOfKeys) {
-                    idx = i
-                    if (newRoot.keys[i] > key) {
-                        break
-                    }
-                }
-
                 if (newRoot.keys[idx] < key) {
                     idx += 1
                 }
