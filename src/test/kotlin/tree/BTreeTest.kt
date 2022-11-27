@@ -10,22 +10,12 @@ internal class BTreeTest {
     fun testBTree() {
         val bTree = BTree<Int>(2)
 
-        val manualTestNumbers = listOf(8, 9, 10, 11, 12, 7, 13, 20, 1, 33, 44)
-        for (element in manualTestNumbers) {
+        val randomTestNumbers = IntArray(10000) { Random().nextInt() }.asList()
+        for (element in randomTestNumbers) {
             bTree.insert(element)
         }
 
-        val result = manualTestNumbers.map { bTree.search(it) != null }.reduce { acc, n -> acc && n}
-//
-//        assertEquals(false, result)
-
-//
-//        val randomTestNumbers = IntArray(100) { Random().nextInt() }.asList()
-//        randomTestNumbers.forEach {
-//            bTree.insert(it)
-//        }
-//        randomTestNumbers.forEach {
-//            assertEquals(false, bTree.search(it) == null)
-//        }
+        val result = randomTestNumbers.map { bTree.search(it) != null }.reduce { acc, n -> acc && n}
+        assertEquals(false, result)
     }
 }

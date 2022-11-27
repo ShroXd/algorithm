@@ -13,23 +13,21 @@ class BTree<K : Comparable<K>>(private val t: Int) {
 
     private fun search(key: K, node: Node<K>?): Node<K>? {
         if (node == null) {
-            return search(key, root)
+            return null
         } else {
             var idx = 0
-            while (idx < node.numOfKeys && node.keys[idx] < key) {
+            while (idx < node.keys.size && key > node.keys[idx]) {
                 idx += 1
             }
 
-            if (idx < node.numOfKeys) {
-                if (node.keys[idx] == key) {
-                    return node
-                } else {
-                    return search(key, node.children[idx])
-                }
+            return if (idx == node.keys.size) {
+                search(key, node.children[idx - 1])
+            } else if (key == node.keys[idx]) {
+                node
             } else if (node.isLeaf) {
-                return null
+                null
             } else {
-                return search(key, node.children[idx])
+                search(key, node.children[idx])
             }
         }
     }
@@ -41,87 +39,68 @@ class BTree<K : Comparable<K>>(private val t: Int) {
     // Node is the parent node
     // Idx is the index of child node which is going to be split
     private fun splitChild(idx: Int, node: Node<K>) {
-        val childNode = node.children[idx]
-        // ? How to decide the leaf
-        val newNode = Node<K>(true)
+        val currentChild = node.children[idx]
+        val newChild = Node<K>(currentChild.isLeaf)
 
-        // Idx is the child node's index
-        // Each key in the child node is smaller than the key in the parent node
-        // Thus we can put the middle key in the parent node with idx position
-        node.keys.add(idx, childNode.keys[t - 1])
-        node.numOfKeys += 1
+        newChild.keys = currentChild.keys.slice(0 until t).toMutableList()
+        if (currentChild.isLeaf) {
+            newChild.children = currentChild.children.slice(0 until t).toMutableList()
+        }
 
-        // left child node, right child node
-        // [t, t), [t, 2t)
-        newNode.keys = childNode.keys.slice(0 until t - 1).toMutableList()
-        childNode.keys = childNode.keys.slice(t until 2 * t - 1).toMutableList()
+        node.children.add(newChild)
+        node.keys[t] = currentChild.keys[t]
 
-        newNode.numOfKeys = newNode.keys.size
-        childNode.numOfKeys = childNode.keys.size
-
-        node.children.add(idx, newNode)
-
-        if (childNode.children.size != 0) {
-            newNode.isLeaf = false
-
-            newNode.children = childNode.children.slice(0 until t - 1).toMutableList()
-            childNode.children = childNode.children.slice(t until 2 * t).toMutableList()
+        currentChild.keys = currentChild.keys.slice(t + 1 until currentChild.keys.size).toMutableList()
+        if (currentChild.isLeaf) {
+            currentChild.children = currentChild.children.slice(t until currentChild.children.size).toMutableList()
         }
     }
 
     // Insert the key into a non-full node
     private fun insertNonFull(key: K, node: Node<K>) {
-        var idx = node.numOfKeys - 1
+        // Initialize index as index of rightmost element
+        var idx = node.keys.size - 1
 
         if (node.isLeaf) {
             while (idx >= 0 && node.keys[idx] > key) {
                 idx -= 1
             }
 
+            // Stop at the left of correct position
             node.keys.add(idx + 1, key)
-            node.numOfKeys += 1
         } else {
+            // When while end, the index will be left of the last larger item
             while (idx >= 0 && node.keys[idx] > key) {
                 idx -= 1
             }
 
-            idx += 1
-            val targetChild = node.children[idx]
-            // If the child node is full
-            if (targetChild.numOfKeys == capacityOfKeys) {
-                splitChild(idx, node)
-                if (node.keys[idx] < key) {
+            // If the found child is full
+            if (node.children[idx + 1].keys.size == 2 * t - 1) {
+                splitChild(idx + 1, node)
+                if (node.keys[idx + 1] < key) {
                     idx += 1
                 }
             }
 
-            insertNonFull(key, node.children[idx])
+            insertNonFull(key, node.children[idx + 1])
         }
     }
 
     fun insert(key: K) {
         if (root == null) {
-            val newNode = Node<K>(true)
-            newNode.keys.add(key)
-            newNode.numOfKeys += 1
-
-            root = newNode
+            val temp = Node<K>(true)
+            temp.keys.add(key)
         } else {
-            val currentRoot: Node<K> = root!!
-
-            // If root is full, then tree grows in height
-            if (currentRoot.numOfKeys == capacityOfKeys) {
+            val currentRoot = root!!
+            if (currentRoot.keys.size == 2 * t - 1) {
                 val newRoot = Node<K>(false)
                 newRoot.children.add(currentRoot)
-
                 splitChild(0, newRoot)
 
-                // Now root node has two child nodes
                 var idx = 0
-                if (newRoot.keys[idx] < key) {
+                if (newRoot.keys[0] < key) {
                     idx += 1
                 }
-
                 insertNonFull(key, newRoot.children[idx])
 
                 root = newRoot
