@@ -34,6 +34,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             }
         }
     }
+
     fun search(key: K): Node<K>? {
         return search(key, root)
     }
@@ -120,4 +121,120 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             }
         }
     }
+
+    private fun findKey(key: K, node: Node<K>): Int {
+        var idx = 0
+        while (idx < node.keys.size && key > node.keys[idx]) {
+            idx += 1
+        }
+
+        return idx
+    }
+
+    fun remove(key: K) {
+        if (root == null) {
+            throw Error("Nothing in the b tree")
+        }
+
+        return remove(key, root!!)
+    }
+
+    private fun remove(key: K, node: Node<K>) {
+        val idx = findKey(key, node)
+
+        if (idx < node.keys.size && node.keys[idx] == key) {
+            if (node.isLeaf) {
+                node.keys = removeFromLeaf(idx, node)
+            } else {
+                // TODO: remove from non leaf
+            }
+        } else {
+            if (node.isLeaf) {
+                throw Error("The key $key does not exist in the tree\n")
+            }
+
+            val isLast = idx == node.keys.size
+
+            if (node.children[idx].keys.size < t) {
+                // Fill the child node
+            }
+
+            if (isLast && idx > node.keys.size) {
+                remove(key, node.children[idx - 1])
+            } else {
+                remove(key, node.children[idx])
+            }
+        }
+    }
+
+    private fun removeFromLeaf(idx: Int, node: Node<K>): MutableList<K> =
+        mutableListOf(node.keys).removeAt(idx)
+
+    private fun removeFromNonLeaf(idx: Int, node: Node<K>) {
+        val key = node.keys[idx]
+
+        // Left child node has enough keys
+        if (node.children[idx].keys.size >= t) {
+            val predecessor = getPredecessor(idx, node)
+            node.keys[idx] = predecessor
+
+            remove(key, node.children[idx])
+        } else if (node.children[idx + 1].keys.size >= t) {
+            val successor = getSuccessor(idx, node)
+            node.keys[idx] = successor
+
+            remove(key, node.children[idx + 1])
+        } else {
+            // TODO: merge two child nodes
+            remove(key, node.children[idx])
+        }
+    }
+
+    private fun getPredecessor(idx: Int, node: Node<K>): K {
+        var curr = node.children[idx]
+        while (!curr.isLeaf) {
+            // The last child node
+            curr = curr.children.last()
+        }
+
+        return curr.keys.last()
+    }
+
+    private fun getSuccessor(idx: Int, node: Node<K>): K {
+        var curr = node.children[idx]
+        while (!curr.isLeaf) {
+            curr = curr.children.first()
+        }
+
+        return curr.keys.first()
+    }
+
+    private fun fill(idx: Int, node: Node<K>) {
+        if (idx != 0 && node.children[idx - 1].keys.size >= t) {
+            // TODO: borrow from prev child node
+        } else if (idx != node.keys.size && node.children[idx + 1].keys.size >= t) {
+            // TODO: borrow from next child node
+        } else {
+            // If the child is the last one
+            if (idx == node.keys.size) {
+               // TODO: merge it with prev
+            } else {
+               // TODO: merge it with next
+            }
+        }
+    }
+
+    private fun borrowFromPrev(idx: Int, node: Node<K>) {
+        val child = node.children[idx]
+        val sibling = node.children[idx - 1]
+
+        child.keys.add(0, node.keys[idx - 1])
+        if (!child.isLeaf) {
+            child.children.add(0, sibling.children.last())
+            sibling.children.removeLast()
+        }
+
+        node.keys[idx - 1] = sibling.keys.last()
+    }
 }
+
