@@ -8,35 +8,29 @@ class BTree<K : Comparable<K>>(private val t: Int) {
 
     private var root: Node<K>? = null
 
-    private fun search(key: K, node: Node<K>?): Node<K>? {
-        if (node == null) {
-            return null
-        } else {
-            var idx = 0
-            // When the while loop end, the index will be at right of the last element which is smaller than the key
-            // 1 5 10 14 20 key=18 22
-            while (idx < node.keys.size && key > node.keys[idx]) {
-                idx += 1
-            }
+    private fun search(key: K, node: Node<K>): Node<K>? {
+        var idx = node.keys.size - 1
 
-            // Check if the key is the largest key in the array
-            // If so, the index will be equals to node.keys.size
-            return if (idx == node.keys.size) {
-                search(key, node.children[idx - 1])
-            } else if (key == node.keys[idx]) {
-                // Check if we find the key
-                node
-            } else if (node.isLeaf) {
-                null
-            } else {
-                // Jump into the children
-                search(key, node.children[idx])
-            }
+        while (idx >= 0 && node.keys[idx] > key) {
+            idx -= 1
         }
+
+        if (node.keys[if (idx == -1) 0 else idx] == key) {
+            return node
+        }
+
+        if (node.isLeaf) {
+            return null
+        }
+
+        return search(key, node.children[idx + 1])
     }
 
     fun search(key: K): Node<K>? {
-        return search(key, root)
+        if (root == null) {
+            throw Error("B Tree is empty")
+        }
+        return search(key, root!!)
     }
 
     // Node is the parent node
@@ -47,20 +41,21 @@ class BTree<K : Comparable<K>>(private val t: Int) {
 
         // We need to push the middle key into the parent node
         // Divide all child nodes equally
-        newChild.keys = currentChild.keys.slice(0 until t).toMutableList()
-        if (currentChild.isLeaf) {
-            newChild.children = currentChild.children.slice(0 until t).toMutableList()
+        newChild.keys = currentChild.keys.slice(t until currentChild.keys.size).toMutableList()
+        if (!currentChild.isLeaf) {
+            // TODO: Check the index
+            newChild.children = currentChild.children.slice(t until currentChild.children.size).toMutableList()
         }
 
         // The structure of the b tree is
         // node
         // currentChild / newChild
         node.children.add(newChild)
-        node.keys[t] = currentChild.keys[t]
+        node.keys.add(currentChild.keys[t - 1])
 
-        currentChild.keys = currentChild.keys.slice(t + 1 until currentChild.keys.size).toMutableList()
-        if (currentChild.isLeaf) {
-            currentChild.children = currentChild.children.slice(t until currentChild.children.size).toMutableList()
+        currentChild.keys = currentChild.keys.slice(0 until t - 1).toMutableList()
+        if (!currentChild.isLeaf) {
+            currentChild.children = currentChild.children.slice(0 until t).toMutableList()
         }
     }
 
@@ -78,6 +73,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             node.keys.add(idx + 1, key)
         } else {
             // When while end, the index will be left of the last larger item
+            // Which means, keys in the child node to be split is larger than node[idx]
             while (idx >= 0 && node.keys[idx] > key) {
                 idx -= 1
             }
@@ -100,6 +96,8 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         if (root == null) {
             val temp = Node<K>(true)
             temp.keys.add(key)
+
+            root = temp
         } else {
             val currentRoot = root!!
             // If the root node is full
@@ -146,7 +144,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             if (node.isLeaf) {
                 node.keys = removeFromLeaf(idx, node)
             } else {
-                // TODO: remove from non leaf
+                removeFromNonLeaf(idx, node)
             }
         } else {
             if (node.isLeaf) {
@@ -157,6 +155,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
 
             if (node.children[idx].keys.size < t) {
                 // Fill the child node
+                fill(idx, node)
             }
 
             if (isLast && idx > node.keys.size) {
@@ -185,7 +184,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
 
             remove(key, node.children[idx + 1])
         } else {
-            // TODO: merge two child nodes
+            merge(idx, node)
             remove(key, node.children[idx])
         }
     }
@@ -211,15 +210,15 @@ class BTree<K : Comparable<K>>(private val t: Int) {
 
     private fun fill(idx: Int, node: Node<K>) {
         if (idx != 0 && node.children[idx - 1].keys.size >= t) {
-            // TODO: borrow from prev child node
+            borrowFromPrev(idx, node)
         } else if (idx != node.keys.size && node.children[idx + 1].keys.size >= t) {
-            // TODO: borrow from next child node
+            borrowFromNext(idx, node)
         } else {
             // If the child is the last one
             if (idx == node.keys.size) {
-               // TODO: merge it with prev
+                merge(idx - 1, node)
             } else {
-               // TODO: merge it with next
+                merge(idx, node)
             }
         }
     }
@@ -235,6 +234,34 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         }
 
         node.keys[idx - 1] = sibling.keys.last()
+    }
+
+    private fun borrowFromNext(idx: Int, node: Node<K>) {
+        val child = node.children[idx]
+        val sibling = node.children[idx + 1]
+
+        child.keys.add(0, node.keys[idx])
+        if (!child.isLeaf) {
+            child.children.add(sibling.children.first())
+            sibling.children.removeFirst()
+        }
+
+        node.keys[idx] = sibling.keys.first()
+    }
+
+    // Merge node.children[idx] with node.children[idx+1]
+    private fun merge(idx: Int, node: Node<K>) {
+        val child = node.children[idx]
+        val sibling = node.children[idx + 1]
+
+        child.keys.add(node.keys[idx])
+
+        child.keys.addAll(sibling.keys)
+        child.children.addAll((sibling.children))
+
+        // Clean up the key and the useless sibling node
+        node.keys.removeAt(idx)
+        node.children.removeAt(idx + 1)
     }
 }
 
