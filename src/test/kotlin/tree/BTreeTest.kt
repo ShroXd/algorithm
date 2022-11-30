@@ -10,22 +10,14 @@ internal class BTreeTest {
     fun testBTreeInitInsertionSearching() {
         val bTree = BTree<Int>(2)
 
-        val manualTestNumber = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-
-        for (element in manualTestNumber) {
+        // 1 million
+        val randomTestNumbers = IntArray(1000000) { Random().nextInt() }.asList()
+        for (element in randomTestNumbers) {
             bTree.insert(element)
         }
 
-        val result = manualTestNumber.map { bTree.search(it) != null }.reduce { acc, n -> acc && n }
+        val result = randomTestNumbers.map { bTree.search(it) != null }.reduce { acc, n -> acc && n }
         assertEquals(true, result)
-
-//        val randomTestNumbers = IntArray(10000) { Random().nextInt() }.asList()
-//        for (element in randomTestNumbers) {
-//            bTree.insert(element)
-//        }
-//
-//        val result = randomTestNumbers.map { bTree.search(it) != null }.reduce { acc, n -> acc && n }
-//        assertEquals(true, result)
     }
 
     @Test

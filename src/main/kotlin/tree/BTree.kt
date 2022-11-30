@@ -43,15 +43,14 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         // Divide all child nodes equally
         newChild.keys = currentChild.keys.slice(t until currentChild.keys.size).toMutableList()
         if (!currentChild.isLeaf) {
-            // TODO: Check the index
             newChild.children = currentChild.children.slice(t until currentChild.children.size).toMutableList()
         }
 
         // The structure of the b tree is
         // node
         // currentChild / newChild
-        node.children.add(newChild)
-        node.keys.add(currentChild.keys[t - 1])
+        node.keys.add(idx, currentChild.keys[t - 1])
+        node.children.add(idx + 1, newChild)
 
         currentChild.keys = currentChild.keys.slice(0 until t - 1).toMutableList()
         if (!currentChild.isLeaf) {
