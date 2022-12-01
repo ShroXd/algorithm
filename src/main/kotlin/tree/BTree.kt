@@ -137,11 +137,14 @@ class BTree<K : Comparable<K>>(private val t: Int) {
     }
 
     private fun remove(key: K, node: Node<K>) {
-        val idx = findKey(key, node)
+        var idx = 0
+        while (idx < node.keys.size && key > node.keys[idx]) {
+            idx += 1
+        }
 
         if (idx < node.keys.size && node.keys[idx] == key) {
             if (node.isLeaf) {
-                node.keys = removeFromLeaf(idx, node)
+                removeFromLeaf(idx, node)
             } else {
                 removeFromNonLeaf(idx, node)
             }
@@ -149,7 +152,6 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             if (node.isLeaf) {
                 throw Error("The key $key does not exist in the tree\n")
             }
-
             val isLast = idx == node.keys.size
 
             if (node.children[idx].keys.size < t) {
@@ -157,6 +159,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
                 fill(idx, node)
             }
 
+            // Last child will merge with prev one, so we need to move the idx one step forward
             if (isLast && idx > node.keys.size) {
                 remove(key, node.children[idx - 1])
             } else {
@@ -165,8 +168,8 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         }
     }
 
-    private fun removeFromLeaf(idx: Int, node: Node<K>): MutableList<K> =
-        mutableListOf(node.keys).removeAt(idx)
+    private fun removeFromLeaf(idx: Int, node: Node<K>) =
+        node.keys.removeAt(idx)
 
     private fun removeFromNonLeaf(idx: Int, node: Node<K>) {
         val key = node.keys[idx]
@@ -176,12 +179,12 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             val predecessor = getPredecessor(idx, node)
             node.keys[idx] = predecessor
 
-            remove(key, node.children[idx])
+            remove(predecessor, node.children[idx])
         } else if (node.children[idx + 1].keys.size >= t) {
             val successor = getSuccessor(idx, node)
             node.keys[idx] = successor
 
-            remove(key, node.children[idx + 1])
+            remove(successor, node.children[idx + 1])
         } else {
             merge(idx, node)
             remove(key, node.children[idx])
@@ -199,7 +202,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
     }
 
     private fun getSuccessor(idx: Int, node: Node<K>): K {
-        var curr = node.children[idx]
+        var curr = node.children[idx + 1]
         while (!curr.isLeaf) {
             curr = curr.children.first()
         }
@@ -239,13 +242,15 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         val child = node.children[idx]
         val sibling = node.children[idx + 1]
 
-        child.keys.add(0, node.keys[idx])
+        // Child is the left subtree of current node, therefore each key in this node is smaller than that in parent node
+        child.keys.add(node.keys[idx])
         if (!child.isLeaf) {
             child.children.add(sibling.children.first())
             sibling.children.removeFirst()
         }
 
         node.keys[idx] = sibling.keys.first()
+        sibling.keys.removeFirst()
     }
 
     // Merge node.children[idx] with node.children[idx+1]
@@ -256,7 +261,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         child.keys.add(node.keys[idx])
 
         child.keys.addAll(sibling.keys)
-        child.children.addAll((sibling.children))
+        child.children.addAll(sibling.children)
 
         // Clean up the key and the useless sibling node
         node.keys.removeAt(idx)
