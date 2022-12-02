@@ -133,7 +133,15 @@ class BTree<K : Comparable<K>>(private val t: Int) {
             throw Error("Nothing in the b tree")
         }
 
-        return remove(key, root!!)
+        remove(key, root!!)
+
+        if (root!!.keys.size == 0) {
+            root = if (root!!.isLeaf) {
+                null
+            } else {
+                root!!.children[0]
+            }
+        }
     }
 
     private fun remove(key: K, node: Node<K>) {
@@ -236,6 +244,7 @@ class BTree<K : Comparable<K>>(private val t: Int) {
         }
 
         node.keys[idx - 1] = sibling.keys.last()
+        sibling.keys.removeLast()
     }
 
     private fun borrowFromNext(idx: Int, node: Node<K>) {
