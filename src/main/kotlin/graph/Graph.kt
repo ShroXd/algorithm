@@ -1,6 +1,6 @@
 package graph
 
-class Graph(private var vertices: Int) {
+class Graph(private val vertices: Int) {
     private var edges: Int = 0
     // Adjacency list
     var adjacencyList: MutableList<MutableList<Int>> = mutableListOf()
