@@ -1,13 +1,22 @@
 package graph
 
-class AdjMatrixGraph(private val vertices: Int) {
+class AdjMatrixGraph(vertices: Int): Graph {
+    override val vertices: Int
     var edges: Int = 0
         private set
 
     // 2D list
     private val adjacencyMatrix: List<MutableList<Boolean>> = List(vertices) { MutableList(vertices) { false } }
 
-    fun addEdge(a: Int, b: Int) {
+    init {
+        this.vertices = vertices
+    }
+
+    fun vertices(): Int {
+        return this.vertices
+    }
+
+    override fun addEdge(a: Int, b: Int) {
         if (!adjacencyMatrix[a][b]) {
             edges += 1
         }
@@ -25,7 +34,7 @@ class AdjMatrixGraph(private val vertices: Int) {
         adjacencyMatrix[b][a] = false
     }
 
-    fun printGraph() {
+    override fun printGraph() {
         adjacencyMatrix.forEachIndexed { idx, it ->
             print("$idx : ")
             for (i in 0 until it.size) {
