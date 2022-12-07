@@ -47,4 +47,18 @@ class GraphTest {
         assertEquals(1, depthFirstSearch(g, 1))
         assertEquals(2, depthFirstSearch(g, 2))
     }
+
+    @Test
+    fun `test breadth first search on adjacency list graph`() {
+        val g = AdjListGraph(5)
+
+
+        g.addEdge(0, 0)
+        g.addEdge(0, 1)
+        g.addEdge(0, 2)
+        g.addEdge(0, 3)
+        g.addEdge(0, 4)
+
+        assertEquals(5, breadthFirstSearch(g, 0))
+    }
 }
