@@ -1,22 +1,20 @@
 package graph
 
-class AdjMatrixGraph(vertices: Int): Graph {
-    override val vertices: Int
-    var edges: Int = 0
-        private set
-
+class AdjMatrixGraph(override val vertices: Int): Graph {
+    override var edges: Int = 0
     // 2D list
     private val adjacencyMatrix: List<MutableList<Boolean>> = List(vertices) { MutableList(vertices) { false } }
-
-    init {
-        this.vertices = vertices
-    }
-
-    fun vertices(): Int {
-        return this.vertices
+    
+    private fun validateVertex(vararg vertices: Int) {
+        vertices.forEach {
+            if (it < 0 || it > this.vertices) {
+                throw IllegalArgumentException("vertex $it is not between 0 and ${it - 1}")
+            }
+        }
     }
 
     override fun addEdge(a: Int, b: Int) {
+        validateVertex(a, b)
         if (!adjacencyMatrix[a][b]) {
             edges += 1
         }
@@ -25,7 +23,8 @@ class AdjMatrixGraph(vertices: Int): Graph {
         adjacencyMatrix[b][a] = true
     }
 
-    fun removeEdge(a: Int, b: Int) {
+    override fun removeEdge(a: Int, b: Int) {
+        validateVertex(a, b)
         if (adjacencyMatrix[a][b]) {
             edges -= 1
         }

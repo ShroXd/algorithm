@@ -1,39 +1,35 @@
 package graph
 
-class AdjListGraph(vertices: Int): Graph {
-    override val vertices: Int
-    var edges: Int = 0
-        private set
+class AdjListGraph(override val vertices: Int): Graph {
+    override var edges: Int = 0
     // Adjacency list
-    var adjacencyList: MutableList<MutableList<Int>> = mutableListOf()
-
-    init {
-        this.vertices = vertices
-        // Initializes the adjacency matrix for empty graph
-        for (v in 0 until vertices) {
-            adjacencyList.add(mutableListOf())
-        }
-    }
+    val adjacencyList: List<MutableList<Int>> = List(vertices) { mutableListOf() }
 
     private fun validateVertex(vararg vertices: Int) {
         vertices.forEach {
             if (it < 0 || it >= this.vertices) {
-                throw java.lang.IllegalArgumentException("vertex $it is not between 0 and ${it - 1}")
+                throw IllegalArgumentException("vertex $it is not between 0 and ${it - 1}")
             }
         }
     }
 
     override fun addEdge(a: Int, b: Int) {
         validateVertex(a, b)
+        if (!adjacencyList[a].contains(b)) {
+            edges += 1
+        }
 
-        edges += 1
         adjacencyList[a].add(b)
         adjacencyList[b].add(a)
     }
 
-    fun degree(vertex: Int): Int {
-        validateVertex(vertex)
-        return adjacencyList[vertex].size
+    override fun removeEdge(a: Int, b: Int) {
+        validateVertex(a, b)
+        if (adjacencyList[a].contains(b)) {
+            edges -= 1
+        }
+
+        adjacencyList[a].remove(b)
     }
 
     override fun printGraph() {
