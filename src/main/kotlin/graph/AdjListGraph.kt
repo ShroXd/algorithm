@@ -1,9 +1,9 @@
 package graph
 
-class AdjListGraph(override val vertices: Int): Graph {
+class AdjListGraph(override var vertices: Int = 0): Graph {
     override var edges: Int = 0
     // Adjacency list
-    val adjacencyList: List<MutableList<Int>> = List(vertices) { mutableListOf() }
+    val adjacencyList: MutableList<MutableList<Int>> = MutableList(vertices) { mutableListOf() }
 
     private fun validateVertex(vararg vertices: Int) {
         vertices.forEach {
@@ -11,6 +11,11 @@ class AdjListGraph(override val vertices: Int): Graph {
                 throw IllegalArgumentException("vertex $it is not between 0 and ${it - 1}")
             }
         }
+    }
+
+    override fun addVertex() {
+        vertices += 1
+        adjacencyList.add(mutableListOf())
     }
 
     override fun addEdge(a: Int, b: Int) {

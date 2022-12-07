@@ -2,6 +2,10 @@ package graph
 
 class AdjMatrixGraph(override val vertices: Int): Graph {
     override var edges: Int = 0
+    override fun addVertex() {
+        TODO("Not yet implemented")
+    }
+
     // 2D list
     private val adjacencyMatrix: List<MutableList<Boolean>> = List(vertices) { MutableList(vertices) { false } }
     
