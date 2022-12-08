@@ -51,7 +51,7 @@ class AdjacencyListGraphTest {
 
         g.removeEdge(0, 2)
 
-        assertFalse { g.adjacencyList[0].contains(2)}
+        assertFalse { g.adjacencyList[0].contains(2) }
     }
 }
 
@@ -105,47 +105,75 @@ class AdjacencyMatrixGraphTest {
     }
 }
 
-class GraphTest {
+class DFSGraphTest {
+
     @Test
-    fun `test graph which is represented by matrix`() {
-        val g = AdjMatrixGraph(6)
+    fun `search on single-node graph should succeed`() {
+        val g = AdjListGraph(1)
 
-        g.addEdge(0, 2)
-        g.addEdge(1, 3)
-        g.printGraph()
-
-        assertEquals(2, g.edges)
-
-        g.removeEdge(1, 3)
-        g.printGraph()
-
-        assertEquals(1, g.edges)
+        assertTrue { depthFirstSearch(g, 0) == 1 }
     }
 
     @Test
-    fun `test depth first search on adjacency list graph`() {
-        val g = AdjListGraph(10)
-
-        g.addEdge(0, 3)
-        g.addEdge(0, 7)
-        g.addEdge(2, 6)
-
-        assertEquals(3, depthFirstSearch(g, 0))
-        assertEquals(1, depthFirstSearch(g, 1))
-        assertEquals(2, depthFirstSearch(g, 2))
-    }
-
-    @Test
-    fun `test breadth first search on adjacency list graph`() {
+    fun `search on multi-node acyclic graph should succeed`() {
         val g = AdjListGraph(5)
 
+        listOf(1, 2, 3, 4).forEach { g.addEdge(0, it) }
 
-        g.addEdge(0, 0)
-        g.addEdge(0, 1)
-        g.addEdge(0, 2)
-        g.addEdge(0, 3)
-        g.addEdge(0, 4)
+        assertTrue { depthFirstSearch(g, 0) == 5 }
+        listOf(1, 2, 3, 4).forEach {
+            assertTrue { depthFirstSearch(g, it) == 5 }
+        }
+    }
 
-        assertEquals(5, breadthFirstSearch(g, 0))
+    @Test
+    fun `search on multi-node cyclic graph should succeed`() {
+        val g = AdjListGraph(5)
+        val vertices = listOf(1, 2, 3, 4)
+
+        vertices.forEach { g.addEdge(0, it) }
+        g.addEdge(1, 2)
+
+        assertTrue { depthFirstSearch(g, 0) == 5 }
+        vertices.forEach {
+            assertTrue { depthFirstSearch(g, it) == 5 }
+        }
+    }
+}
+
+class BFSGraphTest {
+
+    @Test
+    fun `search on single-node graph should succeed`() {
+        val g = AdjListGraph(1)
+
+        assertTrue { breadthFirstSearch(g, 0) == 1 }
+    }
+
+    @Test
+    fun `search on multi-node acyclic graph should succeed`() {
+        val g = AdjListGraph(5)
+        val vertices = listOf(1, 2, 3, 4)
+
+        vertices.forEach { g.addEdge(0, it) }
+
+        assertTrue { breadthFirstSearch(g, 0) == 5 }
+        vertices.forEach {
+            assertTrue { breadthFirstSearch(g, it) == 5 }
+        }
+    }
+
+    @Test
+    fun `search on multi-node cyclic graph should succeed`() {
+        val g = AdjListGraph(5)
+        val vertices = listOf(1, 2, 3, 4)
+
+        vertices.forEach { g.addEdge(0, it) }
+        g.addEdge(1, 2)
+
+        assertTrue { breadthFirstSearch(g, 0) == 5 }
+        vertices.forEach {
+            assertTrue { breadthFirstSearch(g, it) == 5 }
+        }
     }
 }

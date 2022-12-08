@@ -1,7 +1,6 @@
 package graph
 
 import java.util.LinkedList
-import java.util.Queue
 
 fun depthFirstSearch(graph: AdjListGraph, vertex: Int): Int {
     val marked = MutableList(graph.vertices) { false }
