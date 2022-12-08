@@ -105,7 +105,7 @@ class AdjacencyMatrixGraphTest {
     }
 }
 
-class DFSGraphTest {
+class DFSTest {
 
     @Test
     fun `search on single-node graph should succeed`() {
@@ -141,7 +141,7 @@ class DFSGraphTest {
     }
 }
 
-class BFSGraphTest {
+class BFSTest {
 
     @Test
     fun `search on single-node graph should succeed`() {
@@ -175,5 +175,77 @@ class BFSGraphTest {
         vertices.forEach {
             assertTrue { breadthFirstSearch(g, it) == 5 }
         }
+    }
+}
+
+class DFPSTest() {
+
+    @Test
+    fun `search on single-node graph should succeed`() {
+        val g = AdjListGraph(1)
+
+        assertTrue { depthFirstPathSearch(g, 0, 0) }
+    }
+
+    @Test
+    fun `search on multi-node graph with no path should fail`() {
+        val g = AdjListGraph(5)
+
+        g.addEdge(0, 3)
+        g.addEdge(3, 4)
+
+        assertFalse { depthFirstPathSearch(g, 1, 4) }
+    }
+
+    @Test
+    fun `search on multi-node graph with multiple path should succeed`() {
+        val g = AdjListGraph(5)
+
+        // First path: 0 -> 1 -> 3 -> 4
+        g.addEdge(0, 1)
+        g.addEdge(1, 3)
+        g.addEdge(3, 4)
+
+        // Second path: 0 -> 2 -> 4
+        g.addEdge(0, 2)
+        g.addEdge(2, 4)
+
+        assertTrue { depthFirstPathSearch(g, 0 , 4) }
+    }
+}
+
+class BFPSTest() {
+
+    @Test
+    fun `search on single-node graph should succeed`() {
+        val g = AdjListGraph(1)
+
+        assertTrue { breadthFirstPathSearch(g, 0, 0) }
+    }
+
+    @Test
+    fun `search on multi-node graph with no path should fail`() {
+        val g = AdjListGraph(5)
+
+        g.addEdge(0, 3)
+        g.addEdge(3, 4)
+
+        assertFalse { breadthFirstPathSearch(g, 1, 4) }
+    }
+
+    @Test
+    fun `search on multi-node graph with multiple path should succeed`() {
+        val g = AdjListGraph(5)
+
+        // First path: 0 -> 1 -> 3 -> 4
+        g.addEdge(0, 1)
+        g.addEdge(1, 3)
+        g.addEdge(3, 4)
+
+        // Second path: 0 -> 2 -> 4
+        g.addEdge(0, 2)
+        g.addEdge(2, 4)
+
+        assertTrue { breadthFirstPathSearch(g, 0 , 4) }
     }
 }

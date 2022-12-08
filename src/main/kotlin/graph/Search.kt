@@ -46,3 +46,55 @@ fun breadthFirstSearch(graph: AdjListGraph, vertex: Int): Int {
 
     return count
 }
+
+fun depthFirstPathSearch(graph: AdjListGraph, start: Int, destination: Int): Boolean {
+    val visited: MutableList<Boolean> = MutableList(graph.vertices) { false }
+
+    fun dfps(graph: AdjListGraph, current: Int): Boolean {
+        // Path found
+        if (current == destination) {
+            return true
+        }
+
+        visited[current] = true
+
+        for (n in graph.adjacencyList[current]) {
+            if (!visited[n]) {
+                // Recursive search from neighbor
+                if (dfps(graph, n)) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
+    return dfps(graph, start)
+}
+
+fun breadthFirstPathSearch(graph: AdjListGraph, start: Int, destination: Int): Boolean {
+    val visited: MutableList<Boolean> = MutableList(graph.vertices) { false }
+    val q = LinkedList<Int>()
+
+    q.add(start)
+    visited[start] = true
+
+    while (q.isNotEmpty()) {
+        val curr = q.remove()
+        if (curr == destination) {
+            // path found
+            return true
+        }
+
+        for (n in graph.adjacencyList[curr]) {
+            if (!visited[n]) {
+                q.add(n)
+                visited[n] = true
+            }
+        }
+    }
+
+    // path not found
+    return false
+}
