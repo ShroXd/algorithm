@@ -1,7 +1,6 @@
 package graph
 
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -9,7 +8,7 @@ class AdjacencyListGraphTest {
 
     @Test
     fun `test add vertex`() {
-        val g = AdjListGraph()
+        val g = AdjListUndirectedGraph()
 
         g.addVertex()
         g.addVertex()
@@ -21,7 +20,7 @@ class AdjacencyListGraphTest {
 
     @Test
     fun `test add edge`() {
-        val g = AdjListGraph()
+        val g = AdjListUndirectedGraph()
 
         g.addVertex()
         g.addVertex()
@@ -39,7 +38,7 @@ class AdjacencyListGraphTest {
 
     @Test
     fun `test remove edge`() {
-        val g = AdjListGraph()
+        val g = AdjListUndirectedGraph()
 
         g.addVertex()
         g.addVertex()
@@ -59,7 +58,7 @@ class AdjacencyMatrixGraphTest {
 
     @Test
     fun `test add vertex`() {
-        val g = AdjMatrixGraph()
+        val g = AdjMatrixUndirectedGraph()
 
         g.addVertex()
         g.addVertex()
@@ -71,7 +70,7 @@ class AdjacencyMatrixGraphTest {
 
     @Test
     fun `test add edge`() {
-        val g = AdjMatrixGraph()
+        val g = AdjMatrixUndirectedGraph()
 
         g.addVertex()
         g.addVertex()
@@ -89,7 +88,7 @@ class AdjacencyMatrixGraphTest {
 
     @Test
     fun `test remove edge`() {
-        val g = AdjMatrixGraph()
+        val g = AdjMatrixUndirectedGraph()
 
         g.addVertex()
         g.addVertex()
@@ -109,14 +108,14 @@ class DFSTest {
 
     @Test
     fun `search on single-node graph should succeed`() {
-        val g = AdjListGraph(1)
+        val g = AdjListUndirectedGraph(1)
 
         assertTrue { depthFirstSearch(g, 0) == 1 }
     }
 
     @Test
     fun `search on multi-node acyclic graph should succeed`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
 
         listOf(1, 2, 3, 4).forEach { g.addEdge(0, it) }
 
@@ -128,7 +127,7 @@ class DFSTest {
 
     @Test
     fun `search on multi-node cyclic graph should succeed`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
         val vertices = listOf(1, 2, 3, 4)
 
         vertices.forEach { g.addEdge(0, it) }
@@ -145,14 +144,14 @@ class BFSTest {
 
     @Test
     fun `search on single-node graph should succeed`() {
-        val g = AdjListGraph(1)
+        val g = AdjListUndirectedGraph(1)
 
         assertTrue { breadthFirstSearch(g, 0) == 1 }
     }
 
     @Test
     fun `search on multi-node acyclic graph should succeed`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
         val vertices = listOf(1, 2, 3, 4)
 
         vertices.forEach { g.addEdge(0, it) }
@@ -165,7 +164,7 @@ class BFSTest {
 
     @Test
     fun `search on multi-node cyclic graph should succeed`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
         val vertices = listOf(1, 2, 3, 4)
 
         vertices.forEach { g.addEdge(0, it) }
@@ -182,14 +181,14 @@ class DFPSTest() {
 
     @Test
     fun `search on single-node graph should succeed`() {
-        val g = AdjListGraph(1)
+        val g = AdjListUndirectedGraph(1)
 
         assertTrue { depthFirstPathSearch(g, 0, 0) }
     }
 
     @Test
     fun `search on multi-node graph with no path should fail`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
 
         g.addEdge(0, 3)
         g.addEdge(3, 4)
@@ -199,7 +198,7 @@ class DFPSTest() {
 
     @Test
     fun `search on multi-node graph with multiple path should succeed`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
 
         // First path: 0 -> 1 -> 3 -> 4
         g.addEdge(0, 1)
@@ -218,14 +217,14 @@ class BFPSTest() {
 
     @Test
     fun `search on single-node graph should succeed`() {
-        val g = AdjListGraph(1)
+        val g = AdjListUndirectedGraph(1)
 
         assertTrue { breadthFirstPathSearch(g, 0, 0) }
     }
 
     @Test
     fun `search on multi-node graph with no path should fail`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
 
         g.addEdge(0, 3)
         g.addEdge(3, 4)
@@ -235,7 +234,7 @@ class BFPSTest() {
 
     @Test
     fun `search on multi-node graph with multiple path should succeed`() {
-        val g = AdjListGraph(5)
+        val g = AdjListUndirectedGraph(5)
 
         // First path: 0 -> 1 -> 3 -> 4
         g.addEdge(0, 1)

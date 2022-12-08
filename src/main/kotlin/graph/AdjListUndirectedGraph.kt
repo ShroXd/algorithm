@@ -1,6 +1,6 @@
 package graph
 
-class AdjListGraph(override var vertices: Int = 0): Graph {
+class AdjListUndirectedGraph(override var vertices: Int = 0): Graph {
     override var edges: Int = 0
     // Adjacency list
     val adjacencyList: MutableList<MutableList<Int>> = MutableList(vertices) { mutableListOf() }

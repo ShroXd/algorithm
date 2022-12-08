@@ -2,7 +2,7 @@ package graph
 
 import java.util.LinkedList
 
-fun depthFirstSearch(graph: AdjListGraph, vertex: Int): Int {
+fun depthFirstSearch(graph: AdjListUndirectedGraph, vertex: Int): Int {
     val marked = MutableList(graph.vertices) { false }
     var count = 0
 
@@ -23,7 +23,7 @@ fun depthFirstSearch(graph: AdjListGraph, vertex: Int): Int {
     return dfs(graph, vertex)
 }
 
-fun breadthFirstSearch(graph: AdjListGraph, vertex: Int): Int {
+fun breadthFirstSearch(graph: AdjListUndirectedGraph, vertex: Int): Int {
     val visited = MutableList(graph.vertices) { false }
     var count = 0
 
@@ -47,10 +47,10 @@ fun breadthFirstSearch(graph: AdjListGraph, vertex: Int): Int {
     return count
 }
 
-fun depthFirstPathSearch(graph: AdjListGraph, start: Int, destination: Int): Boolean {
+fun depthFirstPathSearch(graph: AdjListUndirectedGraph, start: Int, destination: Int): Boolean {
     val visited: MutableList<Boolean> = MutableList(graph.vertices) { false }
 
-    fun dfps(graph: AdjListGraph, current: Int): Boolean {
+    fun dfps(graph: AdjListUndirectedGraph, current: Int): Boolean {
         // Path found
         if (current == destination) {
             return true
@@ -73,7 +73,7 @@ fun depthFirstPathSearch(graph: AdjListGraph, start: Int, destination: Int): Boo
     return dfps(graph, start)
 }
 
-fun breadthFirstPathSearch(graph: AdjListGraph, start: Int, destination: Int): Boolean {
+fun breadthFirstPathSearch(graph: AdjListUndirectedGraph, start: Int, destination: Int): Boolean {
     val visited: MutableList<Boolean> = MutableList(graph.vertices) { false }
     val q = LinkedList<Int>()
 

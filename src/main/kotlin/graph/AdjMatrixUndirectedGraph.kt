@@ -1,6 +1,6 @@
 package graph
 
-class AdjMatrixGraph(override var vertices: Int = 0): Graph {
+class AdjMatrixUndirectedGraph(override var vertices: Int = 0): Graph {
     override var edges: Int = 0
     // 2D list
     val adjacencyMatrix: MutableList<MutableList<Boolean>> = MutableList(vertices) { MutableList(vertices) { false } }
