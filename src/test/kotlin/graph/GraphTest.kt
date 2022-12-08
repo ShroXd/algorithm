@@ -55,6 +55,56 @@ class AdjacencyListGraphTest {
     }
 }
 
+class AdjacencyMatrixGraphTest {
+
+    @Test
+    fun `test add vertex`() {
+        val g = AdjMatrixGraph()
+
+        g.addVertex()
+        g.addVertex()
+        g.addVertex()
+        g.addVertex()
+
+        assertTrue { g.vertices == 4 }
+    }
+
+    @Test
+    fun `test add edge`() {
+        val g = AdjMatrixGraph()
+
+        g.addVertex()
+        g.addVertex()
+        g.addVertex()
+        g.addVertex()
+
+        g.addEdge(0, 2)
+        g.addEdge(1, 3)
+
+        assertTrue { g.edges == 2 }
+        assertTrue { g.adjacencyMatrix[0][2] }
+        assertTrue { g.adjacencyMatrix[1][3] }
+        assertFalse { g.adjacencyMatrix[1][2] }
+    }
+
+    @Test
+    fun `test remove edge`() {
+        val g = AdjMatrixGraph()
+
+        g.addVertex()
+        g.addVertex()
+        g.addVertex()
+        g.addVertex()
+
+        g.addEdge(0, 2)
+        g.addEdge(1, 3)
+
+        g.removeEdge(0, 2)
+
+        assertFalse { g.adjacencyMatrix[0][2] }
+    }
+}
+
 class GraphTest {
     @Test
     fun `test graph which is represented by matrix`() {

@@ -1,13 +1,9 @@
 package graph
 
-class AdjMatrixGraph(override val vertices: Int): Graph {
+class AdjMatrixGraph(override var vertices: Int = 0): Graph {
     override var edges: Int = 0
-    override fun addVertex() {
-        TODO("Not yet implemented")
-    }
-
     // 2D list
-    private val adjacencyMatrix: List<MutableList<Boolean>> = List(vertices) { MutableList(vertices) { false } }
+    val adjacencyMatrix: MutableList<MutableList<Boolean>> = MutableList(vertices) { MutableList(vertices) { false } }
     
     private fun validateVertex(vararg vertices: Int) {
         vertices.forEach {
@@ -15,6 +11,12 @@ class AdjMatrixGraph(override val vertices: Int): Graph {
                 throw IllegalArgumentException("vertex $it is not between 0 and ${it - 1}")
             }
         }
+    }
+
+    override fun addVertex() {
+        vertices += 1
+        adjacencyMatrix.map { it.add(false) }
+        adjacencyMatrix.add(MutableList(vertices) { false })
     }
 
     override fun addEdge(a: Int, b: Int) {
