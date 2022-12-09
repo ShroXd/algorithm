@@ -98,3 +98,40 @@ fun breadthFirstPathSearch(graph: AdjListUndirectedGraph, start: Int, destinatio
     // path not found
     return false
 }
+
+fun <T> depthFirstSearch(vertex: Vertex<T>, fn: (v: Vertex<T>) -> Unit) {
+    val visited: MutableSet<Vertex<T>> = mutableSetOf()
+
+    fun dfs(v: Vertex<T>) {
+        if (v in visited) return
+
+        visited.add(v)
+        fn(v)
+
+        v.getNeighbor().forEach {
+            dfs(it.key)
+        }
+    }
+
+    return dfs(vertex)
+}
+
+fun <T> breadthFirstSearch(vertex: Vertex<T>, fn: (v: Vertex<T>) -> Unit) {
+    val visited: MutableSet<Vertex<T>> = mutableSetOf()
+    val queue = LinkedList<Vertex<T>>()
+
+    visited.add(vertex)
+    queue.add(vertex)
+
+    while (queue.isNotEmpty()) {
+        val curr = queue.remove()
+        fn(curr)
+
+        for (neighbor in curr.getNeighbor()) {
+            if (!visited.contains(neighbor.key)) {
+                visited.add(neighbor.key)
+                queue.add(neighbor.key)
+            }
+        }
+    }
+}

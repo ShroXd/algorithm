@@ -1,6 +1,7 @@
 package graph
 
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -320,5 +321,59 @@ class AdjacencyListDirectedGraphTest {
 
         assertTrue { vertex.getNeighbor().isEmpty() }
         assertTrue { vertex.getNeighbor()[newVertex] == null }
+    }
+}
+
+
+class SearchDirectedGraphTest() {
+
+    @Test
+    fun `test depth-first search method on directed graph`() {
+        val v0 = Vertex(0)
+        val v1 = Vertex(1)
+        val v2 = Vertex(2)
+        val v3 = Vertex(3)
+        val v4 = Vertex(4)
+        val graph = AdjListDirectedGraph(mutableListOf(
+            v0, v1, v2, v3, v4
+        ))
+
+        graph.addEdge(v0, v1, 10)
+        graph.addEdge(v1, v3, 10)
+        graph.addEdge(v3, v4, 10)
+
+        graph.addEdge(v1, v2, 10)
+
+        val result: MutableList<Int> = mutableListOf()
+        depthFirstSearch(v0) {
+            result.add(it.data)
+        }
+
+        assertEquals(mutableListOf(0, 1, 3, 4, 2), result)
+    }
+
+    @Test
+    fun `test breadth-first search method on directed graph`() {
+        val v0 = Vertex(0)
+        val v1 = Vertex(1)
+        val v2 = Vertex(2)
+        val v3 = Vertex(3)
+        val v4 = Vertex(4)
+        val graph = AdjListDirectedGraph(mutableListOf(
+            v0, v1, v2, v3, v4
+        ))
+
+        graph.addEdge(v0, v1, 10)
+        graph.addEdge(v1, v3, 10)
+        graph.addEdge(v3, v4, 10)
+
+        graph.addEdge(v1, v2, 10)
+
+        val result: MutableList<Int> = mutableListOf()
+        breadthFirstSearch(v0) {
+            result.add(it.data)
+        }
+
+        assertEquals(mutableListOf(0, 1, 3, 2, 4), result)
     }
 }
