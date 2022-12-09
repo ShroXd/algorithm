@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class AdjacencyListGraphTest {
+class AdjacencyListUndirectedGraphTest {
 
     @Test
     fun `test add vertex`() {
@@ -54,7 +54,7 @@ class AdjacencyListGraphTest {
     }
 }
 
-class AdjacencyMatrixGraphTest {
+class AdjacencyMatrixUndirectedGraphTest {
 
     @Test
     fun `test add vertex`() {
@@ -246,5 +246,79 @@ class BFPSTest() {
         g.addEdge(2, 4)
 
         assertTrue { breadthFirstPathSearch(g, 0 , 4) }
+    }
+}
+
+class VertexTest {
+
+    @Test
+    fun `test the addNeighbor method`() {
+        val vertex = Vertex("Test Vertex")
+        val n1 = Vertex("Neighbor 1")
+        val n2 = Vertex("Neighbor 2")
+
+        vertex.addNeighbor(n1, 10)
+        vertex.addNeighbor(n2, 20)
+
+        assertTrue { vertex.getNeighbor().size == 2 }
+        assertTrue { vertex.getNeighbor()[n1] == 10 }
+        assertTrue { vertex.getNeighbor()[n2] == 20 }
+    }
+
+    @Test
+    fun `test the removeNeighbor method`() {
+        val vertex = Vertex("Test Vertex")
+        val n1 = Vertex("Neighbor 1")
+        val n2 = Vertex("Neighbor 2")
+
+        vertex.addNeighbor(n1, 10)
+        vertex.addNeighbor(n2, 20)
+
+        vertex.removeNeighbor(n2)
+
+        assertTrue { vertex.getNeighbor().size == 1 }
+        assertTrue { vertex.getNeighbor()[n1] == 10 }
+        assertTrue { vertex.getNeighbor()[n2] == null }
+    }
+}
+
+class AdjacencyListDirectedGraphTest {
+
+    @Test
+    fun `test add vertex`() {
+        val vertex = Vertex("Test Vertex")
+        val graph = AdjListDirectedGraph(mutableListOf(vertex))
+
+        graph.addVertex(Vertex("New Vertex"))
+        assertTrue { graph.vertices.size == 2 }
+    }
+
+    @Test
+    fun `test add edge`() {
+        val vertex = Vertex("Test Vertex")
+        val graph = AdjListDirectedGraph(mutableListOf(vertex))
+
+        val newVertex = Vertex("New Vertex")
+        graph.addVertex(newVertex)
+
+        graph.addEdge(vertex, newVertex, 30)
+
+        assertTrue { vertex.getNeighbor().size == 1 }
+        assertTrue { vertex.getNeighbor()[newVertex] == 30 }
+    }
+
+    @Test
+    fun `test remove edge`() {
+        val vertex = Vertex("Test Vertex")
+        val graph = AdjListDirectedGraph(mutableListOf(vertex))
+
+        val newVertex = Vertex("New Vertex")
+        graph.addVertex(newVertex)
+        graph.addEdge(vertex, newVertex, 30)
+
+        graph.removeEdge(vertex, newVertex)
+
+        assertTrue { vertex.getNeighbor().isEmpty() }
+        assertTrue { vertex.getNeighbor()[newVertex] == null }
     }
 }
