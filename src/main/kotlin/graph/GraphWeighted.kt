@@ -4,8 +4,8 @@ class Edge<T>(start: T, end: T, val weight: Int) {
     val connect: Pair<T, T> = start to end
 }
 
-class GraphWeighted<T>(val isDirected: Boolean) {
-    val adj: MutableMap<T, MutableList<Edge<T>>> = mutableMapOf()
+class GraphWeighted<T>(private val isDirected: Boolean) {
+    private val adj: MutableMap<T, MutableList<Edge<T>>> = mutableMapOf()
 
     fun addVertices(vararg vertices: T) {
         vertices.forEach {
@@ -56,9 +56,11 @@ class GraphWeighted<T>(val isDirected: Boolean) {
 
     fun hasEdge(a: T, b: T): Boolean {
         return if (isDirected) {
-            adj[a]?.find { it.connect.second == b } == null
+            adj[a]?.find { it.connect.second == b } != null
         } else {
-            adj[a]?.find { it.connect.second == b } == null && adj[b]?.find { it.connect.second == a } == null
+            adj[a]?.find { it.connect.second == b } != null && adj[b]?.find { it.connect.second == a } != null
         }
     }
+
+    fun numOfVertex() = adj.size
 }
