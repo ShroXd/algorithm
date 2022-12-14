@@ -7,7 +7,7 @@ class AdjMatrixUndirectedGraph(override var vertices: Int = 0): Graph {
     
     private fun validateVertex(vararg vertices: Int) {
         vertices.forEach {
-            if (it < 0 || it > this.vertices) {
+            if (it < 0 || it >= this.vertices) {
                 throw IllegalArgumentException("vertex $it is not between 0 and ${it - 1}")
             }
         }
