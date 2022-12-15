@@ -34,3 +34,62 @@ fun <T> primMST(graph: GraphWeighted<T>): MutableList<Edge<T>> {
 
     return mst
 }
+
+fun <T> kruskalMST(graph: GraphWeighted<T>): MutableList<Edge<T>> {
+    val mst = mutableListOf<Edge<T>>()
+    val edges = graph.adjList().flatMap { it.value }.sortedBy { it.weight }
+    val ds = DisjointSet<T>()
+
+    for (edge in edges) {
+        if (!ds.isSameSet(edge.start, edge.end)) {
+            mst.add(edge)
+            ds.union(edge.start, edge.end)
+        }
+    }
+
+    return mst
+}
+
+class DisjointSet<T> {
+    private val parent = mutableMapOf<T, T>()
+
+    private fun find(element: T): T {
+        var root = element
+        while (parent.contains(root) && root != parent[root]) {
+            root = parent[root]!!
+        }
+
+        return root
+    }
+
+    fun union(e1: T, e2: T) {
+        val r1 = find(e1)
+        val r2 = find(e2)
+
+        if (r1 != r2) {
+            parent[r1] = r2
+        }
+    }
+
+    fun isSameSet(e1: T, e2: T): Boolean = find(e1) == find(e2)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

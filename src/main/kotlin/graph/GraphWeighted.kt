@@ -71,4 +71,5 @@ class GraphWeighted<T>(private val isDirected: Boolean) {
 
     fun vertices(): MutableList<T> = adj.keys.toMutableList()
     fun edges(v: T): MutableList<Edge<T>>? = adj[v]
+    fun adjList(): MutableMap<T, MutableList<Edge<T>>> = adj
 }
