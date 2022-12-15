@@ -1,7 +1,12 @@
 package graph
 
+import java.util.PriorityQueue
+
 class Edge<T>(start: T, end: T, val weight: Int) {
     val connect: Pair<T, T> = start to end
+
+    val start get() = connect.first
+    val end get() = connect.second
 }
 
 class GraphWeighted<T>(private val isDirected: Boolean) {
@@ -62,5 +67,8 @@ class GraphWeighted<T>(private val isDirected: Boolean) {
         }
     }
 
-    fun numOfVertex() = adj.size
+    fun numOfVertex(): Int = adj.size
+
+    fun vertices(): MutableList<T> = adj.keys.toMutableList()
+    fun edges(v: T): MutableList<Edge<T>>? = adj[v]
 }
