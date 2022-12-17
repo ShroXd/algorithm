@@ -34,13 +34,13 @@ class GraphWeighted<T>(private val isDirected: Boolean) {
         if (isDirected) {
             adj.keys.forEach { key ->
                 adj[key]?.remove(adj[key]?.find {
-                    it.connect.second == v
+                    it.end == v
                 })
             }
         } else {
             adj[v]?.forEach { key ->
-                adj[key.connect.second]?.remove(adj[key.connect.second]?.find {
-                    it.connect.second == v
+                adj[key.end]?.remove(adj[key.end]?.find {
+                    it.end == v
                 })
             }
         }
@@ -51,9 +51,9 @@ class GraphWeighted<T>(private val isDirected: Boolean) {
         val v1 = adj[a] ?: throw Error("Graph doesn't have $a")
         val v2 = adj[b] ?: throw Error("Graph doesn't have $b")
 
-        v1.remove(v1.find { it.connect.second == b })
+        v1.remove(v1.find { it.end == b })
         if (!isDirected) {
-            v2.remove(v2.find { it.connect.second == a })
+            v2.remove(v2.find { it.end == a })
         }
     }
 
@@ -61,9 +61,9 @@ class GraphWeighted<T>(private val isDirected: Boolean) {
 
     fun hasEdge(a: T, b: T): Boolean {
         return if (isDirected) {
-            adj[a]?.find { it.connect.second == b } != null
+            adj[a]?.find { it.end == b } != null
         } else {
-            adj[a]?.find { it.connect.second == b } != null && adj[b]?.find { it.connect.second == a } != null
+            adj[a]?.find { it.end == b } != null && adj[b]?.find { it.end == a } != null
         }
     }
 
